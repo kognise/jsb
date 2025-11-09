@@ -4,7 +4,7 @@ import { useState, useEffect } from 'https://esm.sh/preact/hooks'
 import htm from 'https://esm.sh/htm'
 import confetti from 'https://esm.sh/canvas-confetti'
 
-const lang = window.location.host === 'pyb.ee' ? 'py' : 'js'
+const lang = window.location.host === 'pybee.kognise.dev' ? 'py' : 'js'
 
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
