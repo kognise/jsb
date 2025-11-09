@@ -117,6 +117,7 @@ async function loadQuestion(room: Room) {
         return await loadQuestion(room)
     }
     room.question = questionPool[Math.floor(Math.random() * questionPool.length)]!
+    room.previousQuestions.add(room.question.question)
 }
 
 // Returns an error string if it failed
@@ -125,11 +126,11 @@ async function verifyCode(room: Room): Promise<string | null> {
         let result: unknown
         try {
             const func = new Function(room.fullString + '\n;return func')
-            result = func(...testCase.args)
+            result = func()(...testCase.args)
         } catch (error) {
             return String(error)
         }
-        if (deepEquals(result, testCase.result)) {
+        if (!deepEquals(result, testCase.result)) {
             const called = 'func(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
             const expected = inspect(testCase.result, { compact: true })
             const actual = inspect(result, { compact: true })
@@ -205,10 +206,10 @@ app.get('/ws', upgradeWebSocket((c) => {
                 if (timerTimeout !== null) clearTimeout(timerTimeout)
                 room.submissionState = 'submitting'
                 broadcastRoomState(room)
-                void loadQuestion(room)
 
                 room.error = await verifyCode(room)
                 room.submissionState = room.error ? 'incorrect' : 'correct'
+                void loadQuestion(room)
                 broadcastRoomState(room)
             } else if (data.kind === 'play') {
                 const room = findRoomFromWs(id)
@@ -222,8 +223,9 @@ app.get('/ws', upgradeWebSocket((c) => {
                 room.fullString = ''
                 room.error = null
 
-                const timer = 1000 * 60 * 2.5 // 2 minutes, 30 seconds
+                const timer = 1000 * 60 * 3 // 3 minutes
                 room.timerEnd = Date.now() + timer
+                if (timerTimeout !== null) clearTimeout(timerTimeout)
                 timerTimeout = setTimeout(() => {
                     if (room.submissionState === 'inGame') {
                         void loadQuestion(room)
