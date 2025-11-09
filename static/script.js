@@ -130,6 +130,11 @@ function App() {
         }, 1000)
 
         const onDown = (event) => {
+            if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+                ws.send(JSON.stringify({ kind: 'submit' }))
+                return
+            }
+
             if (event.altKey || event.metaKey || event.ctrlKey) return
 
             let letter = null
@@ -194,7 +199,13 @@ function App() {
 
     if (gameState.submissionState === 'notStarted') {
         return html`
-            <div class='game-status'>
+            <form class='game-status' onSubmit=${(event) => {
+                event.preventDefault()
+                ws.send(JSON.stringify({
+                    kind: 'play',
+                    mode: document.getElementById('mode-normal').checked ? 'normal' : 'competitive',
+                }))
+            }}>
                 <h1>Ready up</h1>
                 <p>Start the game as soon as everyone has joined.</p>
                 <p>Player count: ${gameState.playerCount}</p>
@@ -215,12 +226,10 @@ function App() {
                     </label>
                 </div>
 
-                <div class='button-group'>
-                    <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play', mode: document.getElementById('mode-normal').checked ? 'normal' : 'competitive' })) }}>
-                        Start game
-                    </button>
-                </div>
-            </div>
+                <button type='submit'>
+                    Start game
+                </button>
+            </form>
         `
     }
 

@@ -29,6 +29,7 @@ html {
     background: #000000;
     color: #ffffff;
     font-family: monospace;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -184,7 +185,7 @@ button {
     flex-direction: column;
     gap: 20px;
     font-size: 1.25rem;
-    background: #000000;
+    background: #111111;
 
     h1 {
         margin: 0;
@@ -194,6 +195,7 @@ button {
     p {
         margin: 0;
         line-height: 1.5;
+        word-wrap: break-word;
     }
 
     button {
