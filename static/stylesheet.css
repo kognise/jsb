@@ -383,10 +383,10 @@ button {
     .hg-row:has(.hg-button-space) > :not(.hg-button-space) {
         flex-grow: 0;
         min-width: 30px;
-    }
 
-    .hg-button-enter {
-        min-width: 45px;
+        &.hg-button-enter {
+            min-width: 45px;
+        }
     }
 }
 
