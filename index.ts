@@ -1,8 +1,8 @@
-import { randomUUIDv7 } from 'bun'
+import { deepEquals, inspect, randomUUIDv7 } from 'bun'
 import { Hono } from 'hono'
 import { serveStatic, upgradeWebSocket, websocket } from 'hono/bun'
 import type { WSContext } from 'hono/ws'
-import { questions } from './questions'
+import { questions, type Question } from './questions'
 
 const app = new Hono()
 
@@ -41,7 +41,7 @@ interface ClientGameState {
 
 interface Room {
     password: string
-    question: string
+    question: Question
     playerSockets: string[]
     currentPlayer: number
     lastLetter: {
@@ -52,6 +52,7 @@ interface Room {
     timerEnd: number
     submissionState: SubmissionState
     error: string | null
+    previousQuestions: Set<string>
 }
 
 const rooms: Record<string, Room> = {}
@@ -70,7 +71,7 @@ function findRoomFromWs(id: string): Room | null {
 function stateFromRoom(room: Room, id: string): ClientGameState {
     return {
         playerCount: room.playerSockets.length,
-        question: room.question,
+        question: room.question.question,
         currentPlayer: room.currentPlayer,
         lastLetter: room.lastLetter,
         yourPlayer: room.playerSockets.indexOf(id),
@@ -109,11 +110,32 @@ function send(id: string, message: ServerMessage) {
 }
 
 async function loadQuestion(room: Room) {
-    room.question = 'New question?'
+    const questionPool = questions.filter((question) => !room.previousQuestions.has(question.question))
+    if (questionPool.length === 0) {
+        room.previousQuestions.clear()
+        return await loadQuestion(room)
+    }
+    room.question = questionPool[Math.floor(Math.random() * questionPool.length)]!
 }
 
 // Returns an error string if it failed
 async function verifyCode(room: Room): Promise<string | null> {
+    for (const testCase of room.question.testCases) {
+        const func = new Function(room.fullString + '\n;return func')
+
+        let result: unknown
+        try {
+            result = func(...testCase.args)
+        } catch (error) {
+            return String(error)
+        }
+        if (deepEquals(result, testCase.result)) {
+            const called = 'func(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
+            const expected = inspect(testCase.result, { compact: true })
+            const actual = inspect(result, { compact: true })
+            return `Incorrect result for ${called}. Expected: ${expected}, got: ${actual}`
+        }
+    }
     return null
 }
 
@@ -142,14 +164,15 @@ app.get('/ws', upgradeWebSocket((c) => {
                 } else {
                     room = {
                         password: data.password,
-                        question: '',
+                        question: null as any,
                         playerSockets: [ id ],
                         currentPlayer: 0,
                         lastLetter: null,
                         fullString: '',
                         submissionState: 'notStarted',
                         timerEnd: 0,
-                        error: null
+                        error: null,
+                        previousQuestions: new Set()
                     }
 
                     await loadQuestion(room)
