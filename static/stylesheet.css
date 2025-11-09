@@ -408,6 +408,11 @@ button {
             }
         }
     }
+
+    .game-status {
+        background: #000000;
+        padding: 20px;
+    }
 }
 
 ::selection {
