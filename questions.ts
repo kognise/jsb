@@ -703,16 +703,6 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function f(str) that returns true if a string is a valid email format (contains @ and .).',
-        testCases: [
-            { args: ['test@example.com'], result: true },
-            { args: ['invalid-email'], result: false },
-            { args: ['test@'], result: false },
-            { args: ['@example.com'], result: false },
-            { args: ['user@domain.co.uk'], result: true }
-        ]
-    },
-    {
         question: 'Write a function f(n) that returns true if n is a power of 2.',
         testCases: [
             { args: [8], result: true },
