@@ -13,9 +13,13 @@ const html = htm.bind(h)
 
 const ws = new ReconnectingWebSocket('/ws')
 
-const seen = new Set(JSON.parse(localStorage.getItem('seen')))
+const seen = new Set()
+for (const item in JSON.parse(localStorage.getItem('seen'))) {
+    if (item) seen.add(item)
+}
 
 function writeSeen() {
+    console.log('writing seen', seen, [ ...seen ])
     localStorage.setItem('seen', JSON.stringify([ ...seen ]))
 }
 
@@ -79,7 +83,6 @@ function App() {
     useEffect(() => {
         function onMessage(event) {
             const json = JSON.parse(event.data)
-            console.log(json)
 
             if (json.kind === 'gameState') {
                 setIsConnecting(false)
@@ -93,7 +96,7 @@ function App() {
                         }
 
                         if (thisState === 'correct' || thisState === 'incorrect' || thisState === 'timedOut' || thisState === 'timedOutCorrect') {
-                            seen.add(json.question)
+                            seen.add(json.gameState.question)
                             writeSeen()
                         }
 

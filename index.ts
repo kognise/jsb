@@ -4,6 +4,37 @@ import { serveStatic, upgradeWebSocket, websocket } from 'hono/bun'
 import type { WSContext } from 'hono/ws'
 import { questions, type Question } from './questions'
 import z from 'zod'
+import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
+import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
+
+const { runSandboxed } = await loadQuickJs(variant)
+
+const options: SandboxOptions = {
+    allowFetch: false,
+    allowFs: false,
+    console: {
+        log: () => {},
+        error: () => {},
+        warn: () => {},
+        info: () => {},
+        debug: () => {},
+        trace: () => {},
+        assert: () => {},
+        count: () => {},
+        countReset: () => {},
+        dir: () => {},
+        dirxml: () => {},
+        group: () => {},
+        groupCollapsed: () => {},
+        groupEnd: () => {},
+        table: () => {},
+        time: () => {},
+        timeEnd: () => {},
+        timeLog: () => {},
+        clear: () => { },
+    },
+    // memoryLimit - what format is this?
+}
 
 const app = new Hono()
 
@@ -54,6 +85,7 @@ interface ClientGameState {
 }
 
 interface Room {
+    lang: Lang
     password: string
     question: Question
     playerSockets: string[]
@@ -73,14 +105,21 @@ interface Room {
     mode: Mode
 }
 
-const rooms: Record<string, Room> = {}
+type Lang = 'py' | 'js'
+
+const rooms: Record<Lang, Record<string, Room>> = {
+    py: {},
+    js: {},
+}
 const wsById: Record<string, WS> = {}
 
 function findRoomFromWs(id: string): Room | null {
-    for (const roomString in rooms) {
-        const room = rooms[roomString]
-        if (room?.playerSockets.includes(id)) {
-            return room
+    for (const langRooms of Object.values(rooms)) {
+        for (const roomString in langRooms) {
+            const room = langRooms[roomString]
+            if (room?.playerSockets.includes(id)) {
+                return room
+            }
         }
     }
     return null
@@ -104,7 +143,6 @@ function stateFromRoom(room: Room, id: string): ClientGameState {
 }
 
 function broadcastRoomState(room: Room) {
-    console.log(room.fullString)
     for (const id of room.playerSockets) {
         send(id, {
             kind: 'gameState',
@@ -120,7 +158,7 @@ function leaveRoom(id: string) {
     delete room.playersSeen[id]
     room.currentPlayer = room.currentPlayer % room.playerSockets.length
     if (room.playerSockets.length === 0) {
-        delete rooms[room.password]
+        delete rooms[room.lang][room.password]
     } else {
         broadcastRoomState(room)
         send(id, { kind: 'gameState', gameState: null })
@@ -131,7 +169,7 @@ function send(id: string, message: ServerMessage) {
     wsById[id]?.send(JSON.stringify(message))
 }
 
-async function loadQuestion(room: Room) {
+function loadQuestion(room: Room) {
     for (let expectedUnseen = Object.keys(room.playersSeen).length; expectedUnseen >= 0; expectedUnseen--) {
         const questionPool = questions.filter((question) => Object
             .values(room.playersSeen)
@@ -146,24 +184,28 @@ async function loadQuestion(room: Room) {
     }
 
     room.previousQuestions.clear()
-    return await loadQuestion(room)
+    return loadQuestion(room)
 }
 
 // Returns an error string if it failed
 async function verifyCode(room: Room): Promise<string | null> {
     for (const testCase of room.question.testCases) {
-        let result: unknown
-        try {
-            const func = new Function(room.fullString + '\n;return f')
-            result = func()(...testCase.args)
-        } catch (error) {
-            return String(error)
-        }
-        if (!deepEquals(result, testCase.result)) {
-            const called = 'f(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
-            const expected = inspect(testCase.result, { compact: true })
-            const actual = inspect(result, { compact: true })
-            return `Incorrect result for ${called}. Expected: ${expected}, got: ${actual}`
+        const code = `${room.fullString}
+            ; return f(${testCase.args.join(', ')})`
+
+        const sandboxResult = await runSandboxed(async ({ evalCode }) => {
+            return await evalCode(code)
+        }, options)
+
+        if (sandboxResult.ok) {
+            if (!deepEquals(sandboxResult.data, testCase.result)) {
+                const called = 'f(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
+                const expected = inspect(testCase.result, { compact: true })
+                const actual = inspect(sandboxResult.data, { compact: true })
+                return `Incorrect result for ${called}. Expected: ${expected}, got: ${actual}`
+            }
+        } else {
+            return `${sandboxResult.error.name}: ${sandboxResult.error.message}`
         }
     }
     return null
@@ -178,115 +220,124 @@ app.get('/ws', upgradeWebSocket(() => {
 
     return {
         async onMessage(event, ws) {
-            wsById[id] = ws
+            try {
+                wsById[id] = ws
 
-            if (!heartbeatTimeout) heartbeatTimeout = setTimeout(() => leaveRoom(id), 2000)
+                if (!heartbeatTimeout) heartbeatTimeout = setTimeout(() => leaveRoom(id), 2000)
 
-            const data = clientMessageSchema.parse(JSON.parse(event.data.toString()))
+                const data = clientMessageSchema.parse(JSON.parse(event.data.toString()))
 
-            if (data.kind === 'joinRoom') {
-                let room: Room
+                if (data.kind === 'joinRoom') {
+                    let room: Room
 
-                if (rooms[data.password]) {
-                    room = rooms[data.password]!
-                    room.playerSockets.push(id)
-                    room.playersSeen[id] = new Set(data.seen)
-                } else {
-                    room = {
-                        password: data.password,
-                        question: null as any,
-                        playerSockets: [ id ],
-                        currentPlayer: 0,
-                        lastLetter: null,
-                        fullString: '',
-                        submissionState: 'notStarted',
-                        submissionEndingPlayer: null,
-                        timerEnd: 0,
-                        error: null,
-                        previousQuestions: new Set(),
-                        playersSeen: {
-                            [id]: new Set(data.seen),
-                        },
-                        timerTimeout: null,
-                        mode: 'normal',
-                    }
-
-                    await loadQuestion(room)
-
-                    rooms[data.password] = room
-                }
-
-                broadcastRoomState(room)
-            } else if (data.kind === 'letter') {
-                const room = findRoomFromWs(id)
-                if (!room || room.currentPlayer !== room.playerSockets.indexOf(id) || room.submissionState !== 'inGame') return
-
-                room.lastLetter = {
-                    player: room.currentPlayer,
-                    letter: data.letter
-                }
-                room.fullString += data.letter
-                room.currentPlayer = (room.currentPlayer + 1) % room.playerSockets.length
-
-                broadcastRoomState(room)
-            } else if (data.kind === 'leaveRoom') {
-                leaveRoom(id)
-            } else if (data.kind === 'heartbeat') {
-                clearTimeout(heartbeatTimeout)
-                heartbeatTimeout = setTimeout(() => leaveRoom(id), 2000)
-            } else if (data.kind === 'submit') {
-                const room = findRoomFromWs(id)
-                if (!room || room.currentPlayer !== room.playerSockets.indexOf(id) || room.submissionState !== 'inGame') return
-
-                if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
-                room.submissionState = 'submitting'
-                broadcastRoomState(room)
-
-                room.error = await verifyCode(room)
-                room.submissionState = room.error ? 'incorrect' : 'correct'
-                if (room.mode === 'competitive') {
-                    room.submissionEndingPlayer = room.playerSockets.indexOf(id)
-                }
-                broadcastRoomState(room)
-                void loadQuestion(room)
-            } else if (data.kind === 'play') {
-                const room = findRoomFromWs(id)
-                if (!room
-                    || room.submissionState === 'inGame'
-                    || room.submissionState === 'submitting') return
-
-                room.submissionState = 'inGame'
-                room.lastLetter = null
-                room.currentPlayer = Math.floor(Math.random() * room.playerSockets.length)
-                room.fullString = ''
-                room.error = null
-                room.mode = data.mode as Mode
-
-                const timer = 1000 * 60 * 3 // 3 minutes
-                room.timerEnd = Date.now() + timer
-                if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
-                room.timerTimeout = setTimeout(async () => {
-                    if (room.submissionState === 'inGame') {
-                        const error = await verifyCode(room)
-                        if (error) {
-                            room.submissionState = 'timedOut'
-                        } else {
-                            room.error = null
-                            room.submissionState = 'timedOutCorrect'
+                    if (rooms[data.lang][data.password]) {
+                        room = rooms[data.lang][data.password]!
+                        room.playerSockets.push(id)
+                        room.playersSeen[id] = new Set(data.seen)
+                    } else {
+                        room = {
+                            lang: data.lang,
+                            password: data.password,
+                            question: null as any,
+                            playerSockets: [ id ],
+                            currentPlayer: 0,
+                            lastLetter: null,
+                            fullString: '',
+                            submissionState: 'notStarted',
+                            submissionEndingPlayer: null,
+                            timerEnd: 0,
+                            error: null,
+                            previousQuestions: new Set(),
+                            playersSeen: {
+                                [id]: new Set(data.seen),
+                            },
+                            timerTimeout: null,
+                            mode: 'normal',
                         }
 
-                        broadcastRoomState(room)
-                        void loadQuestion(room)
+                        loadQuestion(room)
+
+                        rooms[data.lang][data.password] = room
                     }
-                }, timer)
-                broadcastRoomState(room)
+
+                    broadcastRoomState(room)
+                } else if (data.kind === 'letter') {
+                    const room = findRoomFromWs(id)
+                    if (!room || room.currentPlayer !== room.playerSockets.indexOf(id) || room.submissionState !== 'inGame') return
+
+                    room.lastLetter = {
+                        player: room.currentPlayer,
+                        letter: data.letter
+                    }
+                    room.fullString += data.letter
+                    room.currentPlayer = (room.currentPlayer + 1) % room.playerSockets.length
+
+                    broadcastRoomState(room)
+                } else if (data.kind === 'leaveRoom') {
+                    leaveRoom(id)
+                } else if (data.kind === 'heartbeat') {
+                    clearTimeout(heartbeatTimeout)
+                    heartbeatTimeout = setTimeout(() => leaveRoom(id), 2000)
+                } else if (data.kind === 'submit') {
+                    const room = findRoomFromWs(id)
+                    if (!room || room.currentPlayer !== room.playerSockets.indexOf(id) || room.submissionState !== 'inGame') return
+
+                    if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
+                    room.submissionState = 'submitting'
+                    broadcastRoomState(room)
+
+                    room.error = await verifyCode(room)
+                    room.submissionState = room.error ? 'incorrect' : 'correct'
+                    if (room.mode === 'competitive') {
+                        room.submissionEndingPlayer = room.playerSockets.indexOf(id)
+                    }
+                    broadcastRoomState(room)
+                    loadQuestion(room)
+                } else if (data.kind === 'play') {
+                    const room = findRoomFromWs(id)
+                    if (!room
+                        || room.submissionState === 'inGame'
+                        || room.submissionState === 'submitting') return
+
+                    room.submissionState = 'inGame'
+                    room.lastLetter = null
+                    room.currentPlayer = Math.floor(Math.random() * room.playerSockets.length)
+                    room.fullString = ''
+                    room.error = null
+                    room.mode = data.mode as Mode
+
+                    const timer = 1000 * 60 * 3 // 3 minutes
+                    room.timerEnd = Date.now() + timer
+                    if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
+                    room.timerTimeout = setTimeout(async () => {
+                        if (room.submissionState === 'inGame') {
+                            const error = await verifyCode(room)
+                            if (error) {
+                                room.submissionState = 'timedOut'
+                            } else {
+                                room.error = null
+                                room.submissionState = 'timedOutCorrect'
+                            }
+
+                            broadcastRoomState(room)
+                            loadQuestion(room)
+                        }
+                    }, timer)
+                    broadcastRoomState(room)
+                }
+            } catch (error) {
+                console.error(error)
             }
         },
         onClose: (_event, ws) => {
-            wsById[id] = ws
-            console.log('Connection closed')
-            leaveRoom(id)
-            delete wsById[id]
+            try {
+                wsById[id] = ws
+                console.log('Connection closed')
+                leaveRoom(id)
+                delete wsById[id]
+            } catch (error) {
+                console.error(error)
+            }
         },
     }
 }))

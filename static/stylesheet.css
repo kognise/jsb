@@ -2,7 +2,7 @@
     --theme-js: #f7df1e;
     --theme-js-darker: #c4ac00;
     --theme-py: #5ca1ff;
-    --theme-py-darker: #5ca1ff;
+    --theme-py-darker: #3e7dd3;
 
     --theme: #ffffff;
     --theme-darker: #8b8b8b;
@@ -69,7 +69,7 @@ button {
     user-select: none;
 
     &:hover {
-        background: var(--theme);
+        background: var(--theme-darker);
     }
 }
 
@@ -100,13 +100,22 @@ button {
 
         a {
             text-decoration: none;
+            outline-offset: 2px;
 
             &.pybee {
                 color: var(--theme-py);
+
+                &:focus-visible {
+                    outline: 2px solid var(--theme-py-darker);
+                }
             }
 
             &.jsbee {
                 color: var(--theme-js);
+
+                &:focus-visible {
+                    outline: 2px solid var(--theme-js-darker);
+                }
             }
 
             &:hover {
