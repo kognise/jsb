@@ -320,8 +320,8 @@ function App() {
     }
 
     const remainingMs = gameState.timerEnd - Date.now()
-    const minutes = Math.floor(remainingMs / 1000 / 60)
-    const seconds = Math.floor(remainingMs / 1000) % 60
+    const minutes = Math.max(0, Math.floor(remainingMs / 1000 / 60))
+    const seconds = Math.max(0, Math.floor(remainingMs / 1000) % 60)
 
     return html`
         <div class='game'>
