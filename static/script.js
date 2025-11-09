@@ -203,14 +203,14 @@ function App() {
                         <input id='mode-normal' type='radio' name='mode' value='normal' checked=true />
                         <div>
                             <p class='title'>Normal mode</p>
-                            <p class='description'>Work together.</p>
+                            <p class='description'>Work together to solve the challenge before time runs out.</p>
                         </div>
                     </label>
                     <label>
                         <input id='mode-competitive' type='radio' name='mode' value='competitive' />
                         <div>
                             <p class='title'>Competitive mode</p>
-                            <p class='description'>Work against each other. The player to type the last character wins.</p>
+                            <p class='description'>The person who types the last character wins.</p>
                         </div>
                     </label>
                 </div>
