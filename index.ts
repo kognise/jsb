@@ -3,16 +3,23 @@ import { Hono } from 'hono'
 import { serveStatic, upgradeWebSocket, websocket } from 'hono/bun'
 import type { WSContext } from 'hono/ws'
 import { questions, type Question } from './questions'
+import z from 'zod'
 
 const app = new Hono()
 
-type ClientMessage =
-    | { kind: 'joinRoom', password: string, seen: string[] }
-    | { kind: 'letter', letter: string }
-    | { kind: 'leaveRoom' }
-    | { kind: 'heartbeat' }
-    | { kind: 'submit' }
-    | { kind: 'play' }
+const clientMessageSchema = z.union([
+    z.object({
+        kind: z.literal('joinRoom'),
+        password: z.string(),
+        seen: z.string().array(),
+        lang: z.enum([ 'js', 'py' ]),
+    }),
+    z.object({ kind: z.literal('letter'), letter: z.string() }),
+    z.object({ kind: z.literal('leaveRoom') }),
+    z.object({ kind: z.literal('heartbeat') }),
+    z.object({ kind: z.literal('submit') }),
+    z.object({ kind: z.literal('play') }),
+])
 
 type ServerMessage =
     | {
@@ -164,7 +171,7 @@ app.get('/ws', upgradeWebSocket(() => {
 
             if (!heartbeatTimeout) heartbeatTimeout = setTimeout(() => leaveRoom(id), 2000)
 
-            const data: ClientMessage = JSON.parse(event.data.toString())
+            const data = clientMessageSchema.parse(JSON.parse(event.data.toString()))
 
             if (data.kind === 'joinRoom') {
                 let room: Room

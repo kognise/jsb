@@ -1,3 +1,13 @@
+:root {
+    --theme-js: #f7df1e;
+    --theme-js-darker: #c4ac00;
+    --theme-py: #5ca1ff;
+    --theme-py-darker: #5ca1ff;
+
+    --theme: #ffffff;
+    --theme-darker: #8b8b8b;
+}
+
 @property --left {
     syntax: '<percentage>';
     initial-value: 0%;
@@ -42,7 +52,7 @@ input, button {
     text-align: inherit;
 
     &:focus-visible {
-        outline: 2px solid #c4ac00;
+        outline: 2px solid var(--theme-darker);
         outline-offset: 2px;
     }
 }
@@ -52,14 +62,14 @@ input {
 }
 
 button {
-    background: #f7df1e;
+    background: var(--theme);
     color: #000000;
     font-weight: bold;
     cursor: pointer;
     user-select: none;
 
     &:hover {
-        background: #c4ac00;
+        background: var(--theme);
     }
 }
 
@@ -74,8 +84,35 @@ button {
 
     h1 {
         margin: 0;
-        font-size: 2rem;
-        margin-bottom: 5px;
+        font-size: 2.5rem;
+
+        .brand {
+            color: var(--theme);
+        }
+    }
+
+    p {
+        margin: 0;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        line-height: 1.5;
+        color: #8b8b8b;
+
+        a {
+            text-decoration: none;
+
+            &.pybee {
+                color: var(--theme-py);
+            }
+
+            &.jsbee {
+                color: var(--theme-js);
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
     label {
@@ -100,6 +137,7 @@ button {
 
     p {
         margin: 0;
+        line-height: 1.5;
     }
 
     button {
@@ -193,11 +231,11 @@ button {
                 font-size: 2rem;
                 position: absolute;
                 top: 20px;
-                color: #f7df1e;
+                color: var(--theme);
             }
 
             &.is-you .fg {
-                background: #f7df1e;
+                background: var(--theme);
                 color: #000000;
 
                 .you {
@@ -266,6 +304,6 @@ button {
 }
 
 ::selection {
-    background: #f7df1e;
+    background: var(--theme);
     color: #000000;
 }

@@ -4,6 +4,11 @@ import { useState, useEffect } from 'https://esm.sh/preact/hooks'
 import htm from 'https://esm.sh/htm'
 import confetti from 'https://esm.sh/canvas-confetti'
 
+const lang = 'py'
+
+document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
+document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
+
 const html = htm.bind(h)
 
 const ws = new ReconnectingWebSocket('/ws')
@@ -149,9 +154,21 @@ function App() {
                     kind: 'joinRoom',
                     password: roomCode,
                     seen: [ ...seen ],
+                    lang,
                 }))
             }}>
-                <h1>Join or start a game</h1>
+                ${lang === 'js'
+                    ? html`
+                        <h1>Join or start a <span class='brand'>jsbee</span> game</h1>
+                        <p>or <a href='#' class='pybee'>play pybee</a> instead</p>
+                    `
+                    : html`
+                        <h1>Join or start a <span class='brand'>pybee</span> game</h1>
+                        <p>or <a href='#' class='jsbee'>play jsbee</a> instead</p>
+                    `}
+                <p>
+                    You and N friends (N >= 0) have 3 minutes to write a simple function, but there's a twist: you alternate typing one character at a time, and you can't see what you've written until you submit the code... or run out of time.
+                </p>
                 <label for='room-code'>Game password:</label>
                 <input
                     id='room-code'

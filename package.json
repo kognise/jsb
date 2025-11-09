@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "hono": "^4.10.4"
+    "hono": "^4.10.4",
+    "zod": "^4.1.12"
   },
   "name": "jsb",
   "module": "index.js",
