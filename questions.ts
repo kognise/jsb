@@ -1,9 +1,9 @@
-interface TestCase {
+export interface TestCase {
     args: unknown[]
     result: unknown
 }
 
-interface Question {
+export interface Question {
     question: string
     testCases: TestCase[]
 }

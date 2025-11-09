@@ -21,6 +21,8 @@ function formatLetter(letter) {
         return '⇨'
     } else if (letter === '\n') {
         return '⏎'
+    } else if (letter === ' ') {
+        return '␣'
     } else {
         return letter
     }

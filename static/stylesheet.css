@@ -120,6 +120,7 @@ button {
         gap: 20px;
 
         .question {
+            padding-top: 3px;
             flex: 1;
         }
 

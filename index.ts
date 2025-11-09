@@ -97,6 +97,7 @@ function leaveRoom(id: string) {
     const room = findRoomFromWs(id)
     if (!room) return
     room.playerSockets.splice(room.playerSockets.indexOf(id), 1)
+    room.currentPlayer = room.currentPlayer % room.playerSockets.length
     if (room.playerSockets.length === 0) {
         delete rooms[room.password]
     } else {
@@ -121,10 +122,9 @@ async function loadQuestion(room: Room) {
 // Returns an error string if it failed
 async function verifyCode(room: Room): Promise<string | null> {
     for (const testCase of room.question.testCases) {
-        const func = new Function(room.fullString + '\n;return func')
-
         let result: unknown
         try {
+            const func = new Function(room.fullString + '\n;return func')
             result = func(...testCase.args)
         } catch (error) {
             return String(error)
@@ -213,17 +213,16 @@ app.get('/ws', upgradeWebSocket((c) => {
             } else if (data.kind === 'play') {
                 const room = findRoomFromWs(id)
                 if (!room
-                    || room.currentPlayer !== room.playerSockets.indexOf(id)
                     || room.submissionState === 'inGame'
                     || room.submissionState === 'submitting') return
 
                 room.submissionState = 'inGame'
                 room.lastLetter = null
-                room.currentPlayer = 0
+                room.currentPlayer = Math.floor(Math.random() * room.playerSockets.length)
                 room.fullString = ''
                 room.error = null
 
-                const timer = 1000 * 60 * 2 // 2 minutes
+                const timer = 1000 * 60 * 2.5 // 2 minutes, 30 seconds
                 room.timerEnd = Date.now() + timer
                 timerTimeout = setTimeout(() => {
                     if (room.submissionState === 'inGame') {
