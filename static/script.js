@@ -210,7 +210,7 @@ function App() {
                         <input id='mode-competitive' type='radio' name='mode' value='competitive' />
                         <div>
                             <p class='title'>Competitive mode</p>
-                            <p class='description'>Whoever typed the last character wins.</p>
+                            <p class='description'>Whoever submits the code wins. Fight if you know how.</p>
                         </div>
                     </label>
                 </div>
@@ -237,8 +237,8 @@ function App() {
             if (gameState.submittingPlayer === gameState.yourPlayer) {
                 return html`
                     <div class='game-status'>
-                        <h1>You won!</h1>
-                        <p>You finished the code, and it did the right thing!</p>
+                        <h1>You won!!!</h1>
+                        <p>The code works and YOU were the one to slam on the submit button.</p>
                         <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
                             Play a new challenge
                         </button>
@@ -247,8 +247,8 @@ function App() {
             } else {
                 return html`
                     <div class='game-status'>
-                        <h1>You didn't finish the code :(</h1>
-                        <p>The code is correct, but someone else typed the last character...</p>
+                        <h1>Your friends are better than you</h1>
+                        <p>The code's right, at least! But someone else pressed submit.</p>
                         <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
                             Play a new challenge
                         </button>
