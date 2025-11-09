@@ -10,7 +10,7 @@ interface Question {
 
 export const questions: Question[] = [
     {
-        question: 'Write a function func.sum(a, b) that returns the sum of two numbers.',
+        question: 'Write a function func(a, b) that returns the sum of two numbers.',
         testCases: [
             { args: [2, 3], result: 5 },
             { args: [0, 0], result: 0 },
@@ -20,7 +20,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.reverse(str) that reverses a string.',
+        question: 'Write a function func(str) that reverses a string.',
         testCases: [
             { args: ['hello'], result: 'olleh' },
             { args: [''], result: '' },
@@ -30,7 +30,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.isPalindrome(str) that checks if a string is a palindrome (reads the same forwards and backwards).',
+        question: 'Write a function func(str) that checks if a string is a palindrome (reads the same forwards and backwards).',
         testCases: [
             { args: ['racecar'], result: true },
             { args: ['hello'], result: false },
@@ -41,7 +41,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.factorial(n) that calculates the factorial of a number (n! = n * (n-1) * ... * 1).',
+        question: 'Write a function func(n) that calculates the factorial of a number (n! = n * (n-1) * ... * 1).',
         testCases: [
             { args: [5], result: 120 },
             { args: [0], result: 1 },
@@ -51,7 +51,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.fibonacci(n) that returns the nth Fibonacci number (0, 1, 1, 2, 3, 5, 8, ...).',
+        question: 'Write a function func(n) that returns the nth Fibonacci number (0, 1, 1, 2, 3, 5, 8, ...).',
         testCases: [
             { args: [0], result: 0 },
             { args: [1], result: 1 },
@@ -61,7 +61,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.findMax(arr) that finds the maximum number in an array.',
+        question: 'Write a function func(arr) that finds the maximum number in an array.',
         testCases: [
             { args: [[1, 3, 2]], result: 3 },
             { args: [[-1, -3, -2]], result: -1 },
@@ -71,7 +71,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.isPrime(n) that checks if a number is prime (only divisible by 1 and itself).',
+        question: 'Write a function func(n) that checks if a number is prime (only divisible by 1 and itself).',
         testCases: [
             { args: [2], result: true },
             { args: [3], result: true },
@@ -82,7 +82,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.countVowels(str) that counts the number of vowels (a, e, i, o, u) in a string.',
+        question: 'Write a function func(str) that counts the number of vowels (a, e, i, o, u) in a string.',
         testCases: [
             { args: ['hello'], result: 2 },
             { args: [''], result: 0 },
@@ -93,7 +93,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.removeDuplicates(arr) that removes duplicate values from an array.',
+        question: 'Write a function func(arr) that removes duplicate values from an array.',
         testCases: [
             { args: [[1, 2, 2, 3]], result: [1, 2, 3] },
             { args: [[]], result: [] },
@@ -103,7 +103,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func.capitalizeWords(str) that capitalizes the first letter of each word in a string.',
+        question: 'Write a function func(str) that capitalizes the first letter of each word in a string.',
         testCases: [
             { args: ['hello world'], result: 'Hello World' },
             { args: [''], result: '' },
