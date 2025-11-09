@@ -190,15 +190,15 @@ function App() {
                 <p>Start the game whenever you're ready.</p>
                 <p>Player count: ${gameState.playerCount}</p>
                 <div class='mode-selector'>
-                    <input id='mode-normal' type='radio' name='mode' value='normal' checked=true />
-                    <label for='mode-normal'>
+                    <label>
+                        <input id='mode-normal' type='radio' name='mode' value='normal' checked=true />
                         <div>
                             <p class='title'>Normal mode</p>
                             <p class='description'>Work together.</p>
                         </div>
                     </label>
-                    <input id='mode-competitive' type='radio' name='mode' value='competitive' />
-                    <label for='mode-competitive'>
+                    <label>
+                        <input id='mode-competitive' type='radio' name='mode' value='competitive' />
                         <div>
                             <p class='title'>Competitive mode</p>
                             <p class='description'>Work against each other. The player to type the last character wins.</p>

@@ -132,6 +132,7 @@ button {
         padding: 10px;
         border: 2px solid #222222;
         cursor: pointer;
+        position: relative;
 
         p.title {
             font-size: 1rem;
@@ -146,14 +147,22 @@ button {
             line-height: 1.5;
             color: #8b8b8b;
         }
-    }
 
-    input[type="radio"] {
-        display: none;
-    }
+        input[type='radio'] {
+            height: 1px;
+            width: 1px;
+            opacity: 0;
+            position: absolute;
+        }
 
-    input[type="radio"]:checked + label {
-        border-color: var(--theme);
+        &:has(:focus-visible) {
+            outline: 2px solid var(--theme-darker);
+            outline-offset: 2px;
+        }
+
+        &:has(:checked) {
+            border-color: var(--theme);
+        }
     }
 }
 
