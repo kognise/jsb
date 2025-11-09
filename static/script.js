@@ -189,15 +189,20 @@ function App() {
                 <h1>Waiting for players</h1>
                 <p>Start the game whenever you're ready.</p>
                 <p>Player count: ${gameState.playerCount}</p>
-                <div>
-                    Mode:
-                    <label>
-                        <input id='mode-normal' type='radio' name='mode' value='normal' checked=true />
-                        Normal
+                <div class='mode-selector'>
+                    <input id='mode-normal' type='radio' name='mode' value='normal' checked=true />
+                    <label for='mode-normal'>
+                        <div>
+                            <p class='title'>Normal mode</p>
+                            <p class='description'>Work together.</p>
+                        </div>
                     </label>
-                    <label>
-                        <input id='mode-competitive' type='radio' name='mode' value='competitive' />
-                        Competitive
+                    <input id='mode-competitive' type='radio' name='mode' value='competitive' />
+                    <label for='mode-competitive'>
+                        <div>
+                            <p class='title'>Competitive mode</p>
+                            <p class='description'>Work against each other. The player to type the last character wins.</p>
+                        </div>
                     </label>
                 </div>
                 <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play', mode: document.getElementById('mode-normal').checked ? 'normal' : 'competitive' })) }}>
