@@ -111,5 +111,85 @@ export const questions: Question[] = [
             { args: ['the quick brown fox'], result: 'The Quick Brown Fox' },
             { args: ['already Capitalized'], result: 'Already Capitalized' }
         ]
+    },
+    {
+        question: 'Write a function func(arr) that sorts an array of numbers in ascending order.',
+        testCases: [
+            { args: [[3, 1, 4, 1, 5]], result: [1, 1, 3, 4, 5] },
+            { args: [[]], result: [] },
+            { args: [[42]], result: [42] },
+            { args: [[-1, -3, 0, 2]], result: [-3, -1, 0, 2] },
+            { args: [[5, 5, 5]], result: [5, 5, 5] }
+        ]
+    },
+    {
+        question: 'Write a function func(str) that checks if a string contains only digits.',
+        testCases: [
+            { args: ['123'], result: true },
+            { args: ['abc'], result: false },
+            { args: [''], result: false },
+            { args: ['123abc'], result: false },
+            { args: ['0'], result: true }
+        ]
+    },
+    {
+        question: 'Write a function func(arr) that returns the second largest number in an array.',
+        testCases: [
+            { args: [[1, 3, 2, 5, 4]], result: 4 },
+            { args: [[10, 10, 9]], result: 9 },
+            { args: [[1, 1]], result: 1 },
+            { args: [[5]], result: 5 },
+            { args: [[-1, -5, -3]], result: -3 }
+        ]
+    },
+    {
+        question: 'Write a function func(str) that returns the most frequent character in a string.',
+        testCases: [
+            { args: ['hello'], result: 'l' },
+            { args: ['abcabc'], result: 'a' },
+            { args: ['a'], result: 'a' },
+            { args: ['programming'], result: 'r' },
+            { args: ['aabbcc'], result: 'a' }
+        ]
+    },
+    {
+        question: 'Write a function func(arr) that flattens a nested array one level deep.',
+        testCases: [
+            { args: [[[1, 2], [3, 4]]], result: [1, 2, 3, 4] },
+            { args: [[[1], [2, 3], [4, 5, 6]]], result: [1, 2, 3, 4, 5, 6] },
+            { args: [[[]]], result: [] },
+            { args: [[[1, [2, 3]], [4]]], result: [1, [2, 3], 4] },
+            { args: [[[1, 2, 3]]], result: [1, 2, 3] }
+        ]
+    },
+    {
+        question: 'Write a function func(n) that returns true if n is a perfect square.',
+        testCases: [
+            { args: [16], result: true },
+            { args: [15], result: false },
+            { args: [0], result: true },
+            { args: [1], result: true },
+            { args: [100], result: true }
+        ]
+    },
+    {
+        question: 'Write a function func(str) that returns the longest word in a sentence.',
+        testCases: [
+            { args: ['The quick brown fox'], result: 'quick' },
+            { args: ['Hello world'], result: 'Hello' },
+            { args: ['a'], result: 'a' },
+            { args: ['Programming is fun'], result: 'Programming' },
+            { args: [''], result: '' }
+        ]
+    },
+    {
+        question: 'Write a function func(arr1, arr2) that returns the intersection of two arrays.',
+        testCases: [
+            { args: [[1, 2, 3], [2, 3, 4]], result: [2, 3] },
+            { args: [['a', 'b'], ['b', 'c']], result: ['b'] },
+            { args: [[1, 2], [3, 4]], result: [] },
+            { args: [[], [1, 2]], result: [] },
+            { args: [[1, 1, 2], [1, 2, 2]], result: [1, 2] }
+        ]
     }
 ]
