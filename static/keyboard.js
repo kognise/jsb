@@ -20,13 +20,14 @@ const layout = {
     ],
     alt: [
         '1 2 3 4 5 6 7 8 9 0',
-        '\` @ # $ & * ( ) [ ] { }',
-        '% - + = / ; : ! ? \' "',
-        '{default} {space} {enter}'
+        '\` @ # $ & = ( ) [ ] { }',
+        '% - + * / ; : < > ! ?',
+        '{default} {space} \' " {enter}'
     ],
 }
 
-// qwertyuiopasdfghjklzxcvbnm,.QWERTYUIOPASDFGHJKLZXCVBNM1234567890`@#$&*()[]{}%-+=/;:!?'"⇧⬆⏎⇦
+// https://gchq.github.io/CyberChef/#recipe=URL_Encode(true)&input=cXdlcnR5dWlvcGFzZGZnaGprbHp4Y3Zibm0sLlFXRVJUWVVJT1BBU0RGR0hKS0xaWENWQk5NMTIzNDU2Nzg5MGBAIyQmKigpW117fTw%2BJS0rPS87OiE/JyLih6firIbij47ih6Y&oenc=65001
+
 const display = {
     '{alt}': '.?123',
     '{shift}': '⇧',
