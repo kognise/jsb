@@ -7,7 +7,7 @@ import z from 'zod'
 // @ts-ignore
 import piston from 'piston-client'
 
-const pistonClient = piston({ server: 'https://emkc.org/' })
+const pistonClient = piston({ server: 'http://how-did-i-get-here.net:2000/' })
 
 const app = new Hono()
 
