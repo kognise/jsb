@@ -163,6 +163,7 @@ button {
             width: 1px;
             opacity: 0;
             position: absolute;
+            cursor: pointer;
         }
 
         &:has(:checked) {
