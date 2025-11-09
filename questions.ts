@@ -923,16 +923,6 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function f(n) that returns the largest prime factor of n.',
-        testCases: [
-            { args: [12], result: 3 },
-            { args: [15], result: 5 },
-            { args: [29], result: 29 },
-            { args: [100], result: 5 },
-            { args: [17], result: 17 }
-        ]
-    },
-    {
         question: 'Write a function f(str) that returns true if the string has equal numbers of opening and closing brackets [].',
         testCases: [
             { args: ['[hello]'], result: true },
