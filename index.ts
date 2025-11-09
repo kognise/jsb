@@ -18,7 +18,10 @@ const clientMessageSchema = z.union([
     z.object({ kind: z.literal('leaveRoom') }),
     z.object({ kind: z.literal('heartbeat') }),
     z.object({ kind: z.literal('submit') }),
-    z.object({ kind: z.literal('play') }),
+    z.object({
+        kind: z.literal('play'),
+        mode: z.optional(z.enum([ 'normal', 'competitive' ])),
+    }),
 ])
 
 type ServerMessage =
@@ -31,6 +34,8 @@ type WS = WSContext<unknown>
 
 type SubmissionState = 'notStarted' | 'inGame' | 'submitting' | 'correct' | 'incorrect' | 'timedOut' | 'timedOutCorrect'
 
+type Mode = 'normal' | 'competitive'
+
 interface ClientGameState {
     playerCount: number
     question: string
@@ -42,8 +47,10 @@ interface ClientGameState {
     yourPlayer: number
     timerEnd: number
     submissionState: SubmissionState
+    submissionEndingPlayer: number | null
     fullString: string | null
     error: string | null
+    mode: Mode
 }
 
 interface Room {
@@ -58,10 +65,12 @@ interface Room {
     fullString: string
     timerEnd: number
     submissionState: SubmissionState
+    submissionEndingPlayer: number | null
     error: string | null
     playersSeen: Record<string, Set<string>>
     previousQuestions: Set<string>
     timerTimeout: Timer | null
+    mode: Mode
 }
 
 const rooms: Record<string, Room> = {}
@@ -86,9 +95,11 @@ function stateFromRoom(room: Room, id: string): ClientGameState {
         yourPlayer: room.playerSockets.indexOf(id),
         timerEnd: room.timerEnd,
         submissionState: room.submissionState,
+        submissionEndingPlayer: room.submissionEndingPlayer,
         fullString: (room.submissionState === 'correct' || room.submissionState === 'incorrect' || room.submissionState === 'timedOut' || room.submissionState === 'timedOutCorrect')
             ? room.fullString : null,
         error: room.error,
+        mode: room.mode,
     }
 }
 
@@ -189,13 +200,15 @@ app.get('/ws', upgradeWebSocket(() => {
                         lastLetter: null,
                         fullString: '',
                         submissionState: 'notStarted',
+                        submissionEndingPlayer: null,
                         timerEnd: 0,
                         error: null,
                         previousQuestions: new Set(),
                         playersSeen: {
                             [id]: new Set(data.seen),
                         },
-                        timerTimeout: null
+                        timerTimeout: null,
+                        mode: 'normal',
                     }
 
                     await loadQuestion(room)
@@ -231,6 +244,9 @@ app.get('/ws', upgradeWebSocket(() => {
 
                 room.error = await verifyCode(room)
                 room.submissionState = room.error ? 'incorrect' : 'correct'
+                if (room.mode === 'competitive') {
+                    room.submissionEndingPlayer = room.playerSockets.indexOf(id)
+                }
                 broadcastRoomState(room)
                 void loadQuestion(room)
             } else if (data.kind === 'play') {
@@ -244,6 +260,7 @@ app.get('/ws', upgradeWebSocket(() => {
                 room.currentPlayer = Math.floor(Math.random() * room.playerSockets.length)
                 room.fullString = ''
                 room.error = null
+                room.mode = data.mode as Mode
 
                 const timer = 1000 * 60 * 3 // 3 minutes
                 room.timerEnd = Date.now() + timer

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'https://esm.sh/preact/hooks'
 import htm from 'https://esm.sh/htm'
 import confetti from 'https://esm.sh/canvas-confetti'
 
-const lang = 'py'
+const lang = 'js'
 
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
@@ -189,7 +189,18 @@ function App() {
                 <h1>Waiting for players</h1>
                 <p>Start the game whenever you're ready.</p>
                 <p>Player count: ${gameState.playerCount}</p>
-                <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
+                <div>
+                    Mode:
+                    <label>
+                        <input id='mode-normal' type='radio' name='mode' value='normal' checked=true />
+                        Normal
+                    </label>
+                    <label>
+                        <input id='mode-competitive' type='radio' name='mode' value='competitive' />
+                        Competitive
+                    </label>
+                </div>
+                <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play', mode: document.getElementById('mode-normal').checked ? 'normal' : 'competitive' })) }}>
                     Start game
                 </button>
             </div>
@@ -205,16 +216,40 @@ function App() {
     }
 
     if (gameState.submissionState === 'correct') {
-        return html`
-            <div class='game-status'>
-                <h1>alert('Good job!')</h1>
-                <p>Your code did the right thing!</p>
-                <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
-                    Play a new challenge
-                </button>
-                <pre>${h('code', null, gameState.fullString)}</pre>
-            </div>
-        `
+        if (gameState.mode === 'competitive') {
+            if (gameState.submissionEndingPlayer === gameState.yourPlayer) {
+                return html`
+                    <div class='game-status'>
+                        <h1>You won!</h1>
+                        <p>You finished the code, and it did the right thing!</p>
+                        <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
+                            Play a new challenge
+                        </button>
+                    </div>
+                `
+            } else {
+                return html`
+                    <div class='game-status'>
+                        <h1>You didn't finish the code :(</h1>
+                        <p>The code is correct, but someone else typed the last character...</p>
+                        <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
+                            Play a new challenge
+                        </button>
+                    </div>
+                `
+            }
+        } else {
+            return html`
+                <div class='game-status'>
+                    <h1>alert('Good job!')</h1>
+                    <p>Your code did the right thing!</p>
+                    <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
+                        Play a new challenge
+                    </button>
+                    <pre>${h('code', null, gameState.fullString)}</pre>
+                </div>
+            `
+        }
     }
 
     if (gameState.submissionState === 'timedOutCorrect') {
