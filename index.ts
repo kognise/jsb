@@ -7,7 +7,7 @@ import { questions, type Question } from './questions'
 const app = new Hono()
 
 type ClientMessage =
-    | { kind: 'joinRoom', password: string }
+    | { kind: 'joinRoom', password: string, seen: string[] }
     | { kind: 'letter', letter: string }
     | { kind: 'leaveRoom' }
     | { kind: 'heartbeat' }
@@ -52,7 +52,9 @@ interface Room {
     timerEnd: number
     submissionState: SubmissionState
     error: string | null
+    playersSeen: Record<string, Set<string>>
     previousQuestions: Set<string>
+    timerTimeout: Timer | null
 }
 
 const rooms: Record<string, Room> = {}
@@ -97,6 +99,7 @@ function leaveRoom(id: string) {
     const room = findRoomFromWs(id)
     if (!room) return
     room.playerSockets.splice(room.playerSockets.indexOf(id), 1)
+    delete room.playersSeen[id]
     room.currentPlayer = room.currentPlayer % room.playerSockets.length
     if (room.playerSockets.length === 0) {
         delete rooms[room.password]
@@ -111,13 +114,21 @@ function send(id: string, message: ServerMessage) {
 }
 
 async function loadQuestion(room: Room) {
-    const questionPool = questions.filter((question) => !room.previousQuestions.has(question.question))
-    if (questionPool.length === 0) {
-        room.previousQuestions.clear()
-        return await loadQuestion(room)
+    for (let expectedUnseen = Object.keys(room.playersSeen).length; expectedUnseen >= 0; expectedUnseen--) {
+        const questionPool = questions.filter((question) => Object
+            .values(room.playersSeen)
+            .filter((seen) => !seen.has(question.question) && !room.previousQuestions.has(question.question))
+            .length >= expectedUnseen)
+
+        if (questionPool.length > 0) {
+            room.question = questionPool[Math.floor(Math.random() * questionPool.length)]!
+            room.previousQuestions.add(room.question.question)
+            return
+        }
     }
-    room.question = questionPool[Math.floor(Math.random() * questionPool.length)]!
-    room.previousQuestions.add(room.question.question)
+
+    room.previousQuestions.clear()
+    return await loadQuestion(room)
 }
 
 // Returns an error string if it failed
@@ -125,13 +136,13 @@ async function verifyCode(room: Room): Promise<string | null> {
     for (const testCase of room.question.testCases) {
         let result: unknown
         try {
-            const func = new Function(room.fullString + '\n;return func')
+            const func = new Function(room.fullString + '\n;return f')
             result = func()(...testCase.args)
         } catch (error) {
             return String(error)
         }
         if (!deepEquals(result, testCase.result)) {
-            const called = 'func(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
+            const called = 'f(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
             const expected = inspect(testCase.result, { compact: true })
             const actual = inspect(result, { compact: true })
             return `Incorrect result for ${called}. Expected: ${expected}, got: ${actual}`
@@ -142,9 +153,8 @@ async function verifyCode(room: Room): Promise<string | null> {
 
 app.use('*', serveStatic({ root: './static' }))
 
-app.get('/ws', upgradeWebSocket((c) => {
+app.get('/ws', upgradeWebSocket(() => {
     let heartbeatTimeout: Timer
-    let timerTimeout: Timer | null = null
 
     const id = randomUUIDv7()
 
@@ -162,6 +172,7 @@ app.get('/ws', upgradeWebSocket((c) => {
                 if (rooms[data.password]) {
                     room = rooms[data.password]!
                     room.playerSockets.push(id)
+                    room.playersSeen[id] = new Set(data.seen)
                 } else {
                     room = {
                         password: data.password,
@@ -173,7 +184,11 @@ app.get('/ws', upgradeWebSocket((c) => {
                         submissionState: 'notStarted',
                         timerEnd: 0,
                         error: null,
-                        previousQuestions: new Set()
+                        previousQuestions: new Set(),
+                        playersSeen: {
+                            [id]: new Set(data.seen),
+                        },
+                        timerTimeout: null
                     }
 
                     await loadQuestion(room)
@@ -203,14 +218,14 @@ app.get('/ws', upgradeWebSocket((c) => {
                 const room = findRoomFromWs(id)
                 if (!room || room.currentPlayer !== room.playerSockets.indexOf(id) || room.submissionState !== 'inGame') return
 
-                if (timerTimeout !== null) clearTimeout(timerTimeout)
+                if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
                 room.submissionState = 'submitting'
                 broadcastRoomState(room)
 
                 room.error = await verifyCode(room)
                 room.submissionState = room.error ? 'incorrect' : 'correct'
-                void loadQuestion(room)
                 broadcastRoomState(room)
+                void loadQuestion(room)
             } else if (data.kind === 'play') {
                 const room = findRoomFromWs(id)
                 if (!room
@@ -225,12 +240,12 @@ app.get('/ws', upgradeWebSocket((c) => {
 
                 const timer = 1000 * 60 * 3 // 3 minutes
                 room.timerEnd = Date.now() + timer
-                if (timerTimeout !== null) clearTimeout(timerTimeout)
-                timerTimeout = setTimeout(() => {
+                if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
+                room.timerTimeout = setTimeout(() => {
                     if (room.submissionState === 'inGame') {
-                        void loadQuestion(room)
                         room.submissionState = 'timedOut'
                         broadcastRoomState(room)
+                        void loadQuestion(room)
                     }
                 }, timer)
                 broadcastRoomState(room)

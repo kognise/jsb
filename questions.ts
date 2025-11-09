@@ -10,7 +10,7 @@ export interface Question {
 
 export const questions: Question[] = [
     {
-        question: 'Write a function func(a, b) that returns the sum of two numbers.',
+        question: 'Write a function f(a, b) that returns the sum of two numbers.',
         testCases: [
             { args: [2, 3], result: 5 },
             { args: [0, 0], result: 0 },
@@ -20,7 +20,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that reverses a string.',
+        question: 'Write a function f(str) that reverses a string.',
         testCases: [
             { args: ['hello'], result: 'olleh' },
             { args: [''], result: '' },
@@ -30,7 +30,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that checks if a string is a palindrome (reads the same forwards and backwards).',
+        question: 'Write a function f(str) that checks if a string is a palindrome (reads the same forwards and backwards).',
         testCases: [
             { args: ['racecar'], result: true },
             { args: ['hello'], result: false },
@@ -41,7 +41,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that calculates the factorial of a number (n! = n * (n-1) * ... * 1).',
+        question: 'Write a function f(n) that calculates the factorial of a number (n! = n * (n-1) * ... * 1).',
         testCases: [
             { args: [5], result: 120 },
             { args: [0], result: 1 },
@@ -51,7 +51,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the nth Fibonacci number (0, 1, 1, 2, 3, 5, 8, ...).',
+        question: 'Write a function f(n) that returns the nth Fibonacci number (0, 1, 1, 2, 3, 5, 8, ...).',
         testCases: [
             { args: [0], result: 0 },
             { args: [1], result: 1 },
@@ -61,7 +61,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that finds the maximum number in an array.',
+        question: 'Write a function f(arr) that finds the maximum number in an array.',
         testCases: [
             { args: [[1, 3, 2]], result: 3 },
             { args: [[-1, -3, -2]], result: -1 },
@@ -71,7 +71,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that checks if a number is prime (only divisible by 1 and itself).',
+        question: 'Write a function f(n) that checks if a number is prime (only divisible by 1 and itself).',
         testCases: [
             { args: [2], result: true },
             { args: [3], result: true },
@@ -82,7 +82,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that counts the number of vowels (a, e, i, o, u) in a string.',
+        question: 'Write a function f(str) that counts the number of vowels (a, e, i, o, u) in a string.',
         testCases: [
             { args: ['hello'], result: 2 },
             { args: [''], result: 0 },
@@ -93,7 +93,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that removes duplicate values from an array.',
+        question: 'Write a function f(arr) that removes duplicate values from an array.',
         testCases: [
             { args: [[1, 2, 2, 3]], result: [1, 2, 3] },
             { args: [[]], result: [] },
@@ -103,7 +103,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that capitalizes the first letter of each word in a string.',
+        question: 'Write a function f(str) that capitalizes the first letter of each word in a string.',
         testCases: [
             { args: ['hello world'], result: 'Hello World' },
             { args: [''], result: '' },
@@ -113,7 +113,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that sorts an array of numbers in ascending order.',
+        question: 'Write a function f(arr) that sorts an array of numbers in ascending order.',
         testCases: [
             { args: [[3, 1, 4, 1, 5]], result: [1, 1, 3, 4, 5] },
             { args: [[]], result: [] },
@@ -123,7 +123,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that checks if a string contains only digits.',
+        question: 'Write a function f(str) that checks if a string contains only digits.',
         testCases: [
             { args: ['123'], result: true },
             { args: ['abc'], result: false },
@@ -133,7 +133,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the second largest number in an array.',
+        question: 'Write a function f(arr) that returns the second largest number in an array.',
         testCases: [
             { args: [[1, 3, 2, 5, 4]], result: 4 },
             { args: [[10, 10, 9]], result: 9 },
@@ -143,7 +143,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the most frequent character in a string.',
+        question: 'Write a function f(str) that returns the most frequent character in a string.',
         testCases: [
             { args: ['hello'], result: 'l' },
             { args: ['abcabc'], result: 'a' },
@@ -153,7 +153,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that flattens a nested array one level deep.',
+        question: 'Write a function f(arr) that flattens a nested array one level deep.',
         testCases: [
             { args: [[[1, 2], [3, 4]]], result: [1, 2, 3, 4] },
             { args: [[[1], [2, 3], [4, 5, 6]]], result: [1, 2, 3, 4, 5, 6] },
@@ -163,7 +163,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns true if n is a perfect square.',
+        question: 'Write a function f(n) that returns true if n is a perfect square.',
         testCases: [
             { args: [16], result: true },
             { args: [15], result: false },
@@ -173,7 +173,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the longest word in a sentence.',
+        question: 'Write a function f(str) that returns the longest word in a sentence.',
         testCases: [
             { args: ['The quick brown fox'], result: 'quick' },
             { args: ['Hello world'], result: 'Hello' },
@@ -183,7 +183,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr1, arr2) that returns the intersection of two arrays.',
+        question: 'Write a function f(arr1, arr2) that returns the intersection of two arrays.',
         testCases: [
             { args: [[1, 2, 3], [2, 3, 4]], result: [2, 3] },
             { args: [['a', 'b'], ['b', 'c']], result: ['b'] },
@@ -193,7 +193,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the sum of digits in a number.',
+        question: 'Write a function f(n) that returns the sum of digits in a number.',
         testCases: [
             { args: [123], result: 6 },
             { args: [0], result: 0 },
@@ -203,7 +203,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that checks if all characters in a string are unique.',
+        question: 'Write a function f(str) that checks if all characters in a string are unique.',
         testCases: [
             { args: ['abc'], result: true },
             { args: ['hello'], result: false },
@@ -213,7 +213,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the product of all numbers in an array.',
+        question: 'Write a function f(arr) that returns the product of all numbers in an array.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: 24 },
             { args: [[2, 5]], result: 10 },
@@ -223,7 +223,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the number of words in a string.',
+        question: 'Write a function f(str) that returns the number of words in a string.',
         testCases: [
             { args: ['hello world'], result: 2 },
             { args: [''], result: 0 },
@@ -233,7 +233,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns true if n is an even number.',
+        question: 'Write a function f(n) that returns true if n is an even number.',
         testCases: [
             { args: [4], result: true },
             { args: [5], result: false },
@@ -243,7 +243,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the average of numbers in an array.',
+        question: 'Write a function f(arr) that returns the average of numbers in an array.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: 2.5 },
             { args: [[10, 20]], result: 15 },
@@ -253,7 +253,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that removes all spaces from a string.',
+        question: 'Write a function f(str) that removes all spaces from a string.',
         testCases: [
             { args: ['hello world'], result: 'helloworld' },
             { args: [''], result: '' },
@@ -263,7 +263,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the absolute value of a number.',
+        question: 'Write a function f(n) that returns the absolute value of a number.',
         testCases: [
             { args: [5], result: 5 },
             { args: [-5], result: 5 },
@@ -273,7 +273,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the first element of an array.',
+        question: 'Write a function f(arr) that returns the first element of an array.',
         testCases: [
             { args: [[1, 2, 3]], result: 1 },
             { args: [['a', 'b']], result: 'a' },
@@ -283,7 +283,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the last element of an array.',
+        question: 'Write a function f(arr) that returns the last element of an array.',
         testCases: [
             { args: [[1, 2, 3]], result: 3 },
             { args: [['a', 'b']], result: 'b' },
@@ -293,7 +293,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that converts a string to uppercase.',
+        question: 'Write a function f(str) that converts a string to uppercase.',
         testCases: [
             { args: ['hello'], result: 'HELLO' },
             { args: ['WORLD'], result: 'WORLD' },
@@ -303,7 +303,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that converts a string to lowercase.',
+        question: 'Write a function f(str) that converts a string to lowercase.',
         testCases: [
             { args: ['HELLO'], result: 'hello' },
             { args: ['world'], result: 'world' },
@@ -313,7 +313,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr, n) that returns the first n elements of an array.',
+        question: 'Write a function f(arr, n) that returns the first n elements of an array.',
         testCases: [
             { args: [[1, 2, 3, 4, 5], 3], result: [1, 2, 3] },
             { args: [['a', 'b'], 1], result: ['a'] },
@@ -323,7 +323,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr, n) that returns the last n elements of an array.',
+        question: 'Write a function f(arr, n) that returns the last n elements of an array.',
         testCases: [
             { args: [[1, 2, 3, 4, 5], 3], result: [3, 4, 5] },
             { args: [['a', 'b'], 1], result: ['b'] },
@@ -333,7 +333,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that checks if a string starts with a specific character.',
+        question: 'Write a function f(str) that checks if a string starts with a specific character.',
         testCases: [
             { args: ['hello', 'h'], result: true },
             { args: ['world', 'w'], result: true },
@@ -343,7 +343,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that checks if a string ends with a specific character.',
+        question: 'Write a function f(str) that checks if a string ends with a specific character.',
         testCases: [
             { args: ['hello', 'o'], result: true },
             { args: ['world', 'd'], result: true },
@@ -353,7 +353,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns true if an array is empty.',
+        question: 'Write a function f(arr) that returns true if an array is empty.',
         testCases: [
             { args: [[]], result: true },
             { args: [[1]], result: false },
@@ -363,7 +363,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the square of a number.',
+        question: 'Write a function f(n) that returns the square of a number.',
         testCases: [
             { args: [3], result: 9 },
             { args: [0], result: 0 },
@@ -373,7 +373,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the cube of a number.',
+        question: 'Write a function f(n) that returns the cube of a number.',
         testCases: [
             { args: [3], result: 27 },
             { args: [0], result: 0 },
@@ -383,7 +383,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that checks if an array contains a specific value.',
+        question: 'Write a function f(arr) that checks if an array contains a specific value.',
         testCases: [
             { args: [[1, 2, 3], 2], result: true },
             { args: [['a', 'b'], 'c'], result: false },
@@ -393,7 +393,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the first character of a string.',
+        question: 'Write a function f(str) that returns the first character of a string.',
         testCases: [
             { args: ['hello'], result: 'h' },
             { args: ['a'], result: 'a' },
@@ -403,7 +403,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the last character of a string.',
+        question: 'Write a function f(str) that returns the last character of a string.',
         testCases: [
             { args: ['hello'], result: 'o' },
             { args: ['a'], result: 'a' },
@@ -413,7 +413,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the length of an array.',
+        question: 'Write a function f(arr) that returns the length of an array.',
         testCases: [
             { args: [[1, 2, 3]], result: 3 },
             { args: [[]], result: 0 },
@@ -423,7 +423,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the length of a string.',
+        question: 'Write a function f(str) that returns the length of a string.',
         testCases: [
             { args: ['hello'], result: 5 },
             { args: [''], result: 0 },
@@ -433,7 +433,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns true if n is positive.',
+        question: 'Write a function f(n) that returns true if n is positive.',
         testCases: [
             { args: [5], result: true },
             { args: [-3], result: false },
@@ -443,7 +443,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns true if n is negative.',
+        question: 'Write a function f(n) that returns true if n is negative.',
         testCases: [
             { args: [-5], result: true },
             { args: [3], result: false },
@@ -453,7 +453,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str, char) that counts occurrences of a character in a string.',
+        question: 'Write a function f(str, char) that counts occurrences of a character in a string.',
         testCases: [
             { args: ['hello', 'l'], result: 2 },
             { args: ['programming', 'r'], result: 2 },
@@ -463,7 +463,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns a new array with elements in reverse order.',
+        question: 'Write a function f(arr) that returns a new array with elements in reverse order.',
         testCases: [
             { args: [[1, 2, 3]], result: [3, 2, 1] },
             { args: [['a', 'b']], result: ['b', 'a'] },
@@ -473,7 +473,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str1, str2) that concatenates two strings.',
+        question: 'Write a function f(str1, str2) that concatenates two strings.',
         testCases: [
             { args: ['hello', 'world'], result: 'helloworld' },
             { args: ['', 'test'], result: 'test' },
@@ -483,7 +483,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n, exp) that returns n raised to the power of exp.',
+        question: 'Write a function f(n, exp) that returns n raised to the power of exp.',
         testCases: [
             { args: [2, 3], result: 8 },
             { args: [5, 0], result: 1 },
@@ -493,7 +493,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr, value) that returns the index of the first occurrence of a value in an array.',
+        question: 'Write a function f(arr, value) that returns the index of the first occurrence of a value in an array.',
         testCases: [
             { args: [[1, 2, 3, 2], 2], result: 1 },
             { args: [['a', 'b', 'c'], 'c'], result: 2 },
@@ -503,7 +503,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that checks if a string is empty or contains only whitespace.',
+        question: 'Write a function f(str) that checks if a string is empty or contains only whitespace.',
         testCases: [
             { args: [''], result: true },
             { args: ['   '], result: true },
@@ -513,7 +513,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the sum of all even numbers in an array.',
+        question: 'Write a function f(arr) that returns the sum of all even numbers in an array.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: 6 },
             { args: [[1, 3, 5]], result: 0 },
@@ -523,7 +523,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the sum of all odd numbers in an array.',
+        question: 'Write a function f(arr) that returns the sum of all odd numbers in an array.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: 4 },
             { args: [[2, 4, 6]], result: 0 },
@@ -533,7 +533,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the number of digits in a positive integer.',
+        question: 'Write a function f(n) that returns the number of digits in a positive integer.',
         testCases: [
             { args: [123], result: 3 },
             { args: [5], result: 1 },
@@ -543,7 +543,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns true if all elements in an array are equal.',
+        question: 'Write a function f(arr) that returns true if all elements in an array are equal.',
         testCases: [
             { args: [[1, 1, 1]], result: true },
             { args: [[1, 2, 1]], result: false },
@@ -553,7 +553,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns a string with all duplicate characters removed.',
+        question: 'Write a function f(str) that returns a string with all duplicate characters removed.',
         testCases: [
             { args: ['hello'], result: 'helo' },
             { args: ['programming'], result: 'progamin' },
@@ -563,7 +563,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns true if an array is sorted in ascending order.',
+        question: 'Write a function f(arr) that returns true if an array is sorted in ascending order.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: true },
             { args: [[4, 3, 2, 1]], result: false },
@@ -573,7 +573,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the minimum number in an array.',
+        question: 'Write a function f(arr) that returns the minimum number in an array.',
         testCases: [
             { args: [[3, 1, 4, 1, 5]], result: 1 },
             { args: [[-1, -5, -2]], result: -5 },
@@ -583,7 +583,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns true if a string contains at least one digit.',
+        question: 'Write a function f(str) that returns true if a string contains at least one digit.',
         testCases: [
             { args: ['hello123'], result: true },
             { args: ['hello'], result: false },
@@ -593,7 +593,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns true if a string contains at least one uppercase letter.',
+        question: 'Write a function f(str) that returns true if a string contains at least one uppercase letter.',
         testCases: [
             { args: ['Hello'], result: true },
             { args: ['hello'], result: false },
@@ -603,7 +603,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns true if a string contains at least one lowercase letter.',
+        question: 'Write a function f(str) that returns true if a string contains at least one lowercase letter.',
         testCases: [
             { args: ['Hello'], result: true },
             { args: ['HELLO'], result: false },
@@ -613,7 +613,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns a new array containing only positive numbers.',
+        question: 'Write a function f(arr) that returns a new array containing only positive numbers.',
         testCases: [
             { args: [[-1, 2, -3, 4]], result: [2, 4] },
             { args: [[-5, -10]], result: [] },
@@ -623,7 +623,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns a new array containing only negative numbers.',
+        question: 'Write a function f(arr) that returns a new array containing only negative numbers.',
         testCases: [
             { args: [[-1, 2, -3, 4]], result: [-1, -3] },
             { args: [[1, 2, 3]], result: [] },
@@ -633,7 +633,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str, substring) that returns true if a string contains a substring.',
+        question: 'Write a function f(str, substring) that returns true if a string contains a substring.',
         testCases: [
             { args: ['hello world', 'world'], result: true },
             { args: ['programming', 'gram'], result: true },
@@ -643,7 +643,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the range (difference between max and min) of an array.',
+        question: 'Write a function f(arr) that returns the range (difference between max and min) of an array.',
         testCases: [
             { args: [[1, 5, 3]], result: 4 },
             { args: [[10, 10, 10]], result: 0 },
@@ -653,7 +653,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the sum of all numbers from 1 to n.',
+        question: 'Write a function f(n) that returns the sum of all numbers from 1 to n.',
         testCases: [
             { args: [5], result: 15 },
             { args: [1], result: 1 },
@@ -663,7 +663,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the middle character of a string (or middle two for even length).',
+        question: 'Write a function f(str) that returns the middle character of a string (or middle two for even length).',
         testCases: [
             { args: ['hello'], result: 'l' },
             { args: ['test'], result: 'es' },
@@ -673,7 +673,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns true if an array contains duplicate values.',
+        question: 'Write a function f(arr) that returns true if an array contains duplicate values.',
         testCases: [
             { args: [[1, 2, 3, 2]], result: true },
             { args: [[1, 2, 3]], result: false },
@@ -683,7 +683,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the string with leading and trailing whitespace removed.',
+        question: 'Write a function f(str) that returns the string with leading and trailing whitespace removed.',
         testCases: [
             { args: ['  hello  '], result: 'hello' },
             { args: ['test'], result: 'test' },
@@ -693,7 +693,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr, value) that returns a new array with all occurrences of value removed.',
+        question: 'Write a function f(arr, value) that returns a new array with all occurrences of value removed.',
         testCases: [
             { args: [[1, 2, 3, 2], 2], result: [1, 3] },
             { args: [['a', 'b', 'a'], 'a'], result: ['b'] },
@@ -703,7 +703,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns true if a string is a valid email format (contains @ and .).',
+        question: 'Write a function f(str) that returns true if a string is a valid email format (contains @ and .).',
         testCases: [
             { args: ['test@example.com'], result: true },
             { args: ['invalid-email'], result: false },
@@ -713,7 +713,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns true if n is a power of 2.',
+        question: 'Write a function f(n) that returns true if n is a power of 2.',
         testCases: [
             { args: [8], result: true },
             { args: [6], result: false },
@@ -723,7 +723,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the median value of an array of numbers.',
+        question: 'Write a function f(arr) that returns the median value of an array of numbers.',
         testCases: [
             { args: [[1, 3, 5]], result: 3 },
             { args: [[1, 2, 3, 4]], result: 2.5 },
@@ -733,7 +733,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the string in alternating case (aLtErNaTiNg).',
+        question: 'Write a function f(str) that returns the string in alternating case (aLtErNaTiNg).',
         testCases: [
             { args: ['hello'], result: 'hElLo' },
             { args: ['test'], result: 'tEsT' },
@@ -743,7 +743,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the most frequent element in an array.',
+        question: 'Write a function f(arr) that returns the most frequent element in an array.',
         testCases: [
             { args: [[1, 2, 3, 2, 2]], result: 2 },
             { args: [['a', 'b', 'a']], result: 'a' },
@@ -753,7 +753,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns an array of numbers from 1 to n.',
+        question: 'Write a function f(n) that returns an array of numbers from 1 to n.',
         testCases: [
             { args: [5], result: [1, 2, 3, 4, 5] },
             { args: [1], result: [1] },
@@ -763,7 +763,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the number of consonants in a string.',
+        question: 'Write a function f(str) that returns the number of consonants in a string.',
         testCases: [
             { args: ['hello'], result: 3 },
             { args: ['aeiou'], result: 0 },
@@ -773,7 +773,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr1, arr2) that returns the union of two arrays (all unique elements).',
+        question: 'Write a function f(arr1, arr2) that returns the union of two arrays (all unique elements).',
         testCases: [
             { args: [[1, 2], [2, 3]], result: [1, 2, 3] },
             { args: [['a'], ['b']], result: ['a', 'b'] },
@@ -783,7 +783,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns true if parentheses in a string are balanced.',
+        question: 'Write a function f(str) that returns true if parentheses in a string are balanced.',
         testCases: [
             { args: ['()'], result: true },
             { args: ['(())'], result: true },
@@ -793,7 +793,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the nth triangular number (1+2+...+n).',
+        question: 'Write a function f(n) that returns the nth triangular number (1+2+...+n).',
         testCases: [
             { args: [4], result: 10 },
             { args: [1], result: 1 },
@@ -803,7 +803,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the string with words in reverse order.',
+        question: 'Write a function f(str) that returns the string with words in reverse order.',
         testCases: [
             { args: ['hello world'], result: 'world hello' },
             { args: ['the quick brown fox'], result: 'fox brown quick the' },
@@ -813,7 +813,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the difference between the largest and smallest elements.',
+        question: 'Write a function f(arr) that returns the difference between the largest and smallest elements.',
         testCases: [
             { args: [[1, 5, 3, 9, 2]], result: 8 },
             { args: [[10]], result: 0 },
@@ -823,7 +823,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str, n) that repeats a string n times.',
+        question: 'Write a function f(str, n) that repeats a string n times.',
         testCases: [
             { args: ['hello', 3], result: 'hellohellohello' },
             { args: ['a', 5], result: 'aaaaa' },
@@ -833,7 +833,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns every second element of an array.',
+        question: 'Write a function f(arr) that returns every second element of an array.',
         testCases: [
             { args: [[1, 2, 3, 4, 5]], result: [2, 4] },
             { args: [['a', 'b', 'c']], result: ['b'] },
@@ -843,7 +843,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns true if n is a palindrome number.',
+        question: 'Write a function f(n) that returns true if n is a palindrome number.',
         testCases: [
             { args: [121], result: true },
             { args: [123], result: false },
@@ -853,7 +853,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the sum of indices where the value equals the index.',
+        question: 'Write a function f(arr) that returns the sum of indices where the value equals the index.',
         testCases: [
             { args: [[0, 1, 4, 3]], result: 4 },
             { args: [[1, 1, 2, 3]], result: 1 },
@@ -863,7 +863,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the longest sequence of consecutive identical characters.',
+        question: 'Write a function f(str) that returns the longest sequence of consecutive identical characters.',
         testCases: [
             { args: ['aaabbc'], result: 3 },
             { args: ['abcdef'], result: 1 },
@@ -873,7 +873,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that converts a number to its binary representation as a string.',
+        question: 'Write a function f(n) that converts a number to its binary representation as a string.',
         testCases: [
             { args: [5], result: '101' },
             { args: [8], result: '1000' },
@@ -883,7 +883,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns true if the array forms an arithmetic sequence.',
+        question: 'Write a function f(arr) that returns true if the array forms an arithmetic sequence.',
         testCases: [
             { args: [[1, 3, 5, 7]], result: true },
             { args: [[2, 4, 6, 8]], result: true },
@@ -893,7 +893,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns the character that appears most times consecutively.',
+        question: 'Write a function f(str) that returns the character that appears most times consecutively.',
         testCases: [
             { args: ['aaabbc'], result: 'a' },
             { args: ['hello'], result: 'l' },
@@ -903,7 +903,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the array rotated one position to the right.',
+        question: 'Write a function f(arr) that returns the array rotated one position to the right.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: [4, 1, 2, 3] },
             { args: [['a', 'b']], result: ['b', 'a'] },
@@ -913,7 +913,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the array rotated one position to the left.',
+        question: 'Write a function f(arr) that returns the array rotated one position to the left.',
         testCases: [
             { args: [[1, 2, 3, 4]], result: [2, 3, 4, 1] },
             { args: [['a', 'b']], result: ['b', 'a'] },
@@ -923,7 +923,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(n) that returns the largest prime factor of n.',
+        question: 'Write a function f(n) that returns the largest prime factor of n.',
         testCases: [
             { args: [12], result: 3 },
             { args: [15], result: 5 },
@@ -933,7 +933,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(str) that returns true if the string has equal numbers of opening and closing brackets [].',
+        question: 'Write a function f(str) that returns true if the string has equal numbers of opening and closing brackets [].',
         testCases: [
             { args: ['[hello]'], result: true },
             { args: ['[test[nested]'], result: false },
@@ -943,7 +943,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function func(arr) that returns the kth largest element (k=2 for second largest).',
+        question: 'Write a function f(arr, k) that returns the kth largest element (k=2 for second largest).',
         testCases: [
             { args: [[3, 1, 4, 1, 5], 2], result: 4 },
             { args: [[1, 2, 3], 1], result: 3 },

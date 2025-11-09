@@ -8,6 +8,12 @@ const html = htm.bind(h)
 
 const ws = new ReconnectingWebSocket('/ws')
 
+const seen = new Set(JSON.parse(localStorage.getItem('seen')))
+
+function writeSeen() {
+    localStorage.setItem('seen', JSON.stringify([ ...seen ]))
+}
+
 ws.addEventListener('close', (event) => {
     console.warn('websocket connection lost', event)
 })
@@ -74,6 +80,14 @@ function App() {
                 setGameState((gameState) => {
                     if (json.gameState?.submissionState === 'correct' && gameState?.submissionState !== 'correct') {
                         doConfetti()
+                        seen.add(json.question)
+                        writeSeen()
+                    } else if (json.gameState?.submissionState === 'incorrect' && gameState?.submissionState !== 'incorrect') {
+                        seen.add(json.question)
+                        writeSeen()
+                    } else if (json.gameState?.submissionState === 'timedOut' && gameState?.submissionState !== 'timedOut') {
+                        seen.add(json.question)
+                        writeSeen()
                     }
                     return json.gameState
                 })
@@ -123,6 +137,7 @@ function App() {
                 ws.send(JSON.stringify({
                     kind: 'joinRoom',
                     password: roomCode,
+                    seen: [ ...seen ],
                 }))
             }}>
                 <h1>Join or start a game</h1>
