@@ -4,11 +4,7 @@ import { serveStatic, upgradeWebSocket, websocket } from 'hono/bun'
 import type { WSContext } from 'hono/ws'
 import { questions, type Question } from './questions'
 import z from 'zod'
-// @ts-ignore
-import piston from 'piston-client'
 import { execute } from './piston'
-
-const pistonClient = piston({ server: 'http://how-did-i-get-here.net:2000/' })
 
 const app = new Hono()
 
