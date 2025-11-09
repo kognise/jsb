@@ -1,15 +1,16 @@
-import ReconnectingWebSocket from 'https://esm.sh/@opensumi/reconnecting-websocket'
-import { h, render } from 'https://esm.sh/preact'
-import { useState, useEffect } from 'https://esm.sh/preact/hooks'
-import htm from 'https://esm.sh/htm'
-import confetti from 'https://esm.sh/canvas-confetti'
+import ReconnectingWebSocket from 'https://esm.sh/@opensumi/reconnecting-websocket@4.4.0'
+import { h, render } from 'https://esm.sh/preact@10.27.2'
+import { useState, useEffect } from 'https://esm.sh/preact@10.27.2/hooks'
+import htm from 'https://esm.sh/htm@3.1.1'
+import confetti from 'https://esm.sh/canvas-confetti@1.9.4'
+import { Keyboard } from './keyboard.js'
+
+const html = htm.bind(h)
 
 const lang = window.location.host === 'pybee.kognise.dev' ? 'py' : 'js'
 
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
-
-const html = htm.bind(h)
 
 const ws = new ReconnectingWebSocket('/ws')
 
@@ -355,6 +356,10 @@ function App() {
                     </div>
                 `)}
             </div>
+            <${Keyboard} onChar=${(c) => {
+                if (gameState?.submissionState !== 'inGame') return
+                ws.send(JSON.stringify({ kind: 'letter', letter: c }))
+            }} />
         </div>
     `
 }

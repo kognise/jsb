@@ -28,7 +28,7 @@ html {
     box-sizing: border-box;
     background: #000000;
     color: #ffffff;
-    font-family: monospace;
+    font-family: 'Inconsolata', monospace;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -359,6 +359,37 @@ button {
     60% { opacity: 0.5; }
     70% { opacity: 0; }
     100% { opacity: 0; }
+}
+
+.keyboard {
+    color: #000000;
+    width: 100%;
+    display: none;
+
+    .simple-keyboard.hg-theme-default {
+        border-radius: 0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .hg-theme-default .hg-button {
+        height: 13vw;
+        max-height: 60px;
+        min-height: 40px;
+    }
+
+    .hg-row:has(.hg-button-space) :not(.hg-button-space) {
+        flex-grow: 0;
+    }
+
+    .hg-button-enter {
+        min-width: 45px;
+    }
+}
+
+@media (pointer: coarse) and (hover: none) {
+    .keyboard {
+        display: block;
+    }
 }
 
 ::selection {
