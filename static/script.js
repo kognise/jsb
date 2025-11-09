@@ -168,8 +168,8 @@ function App() {
             }}>
                 ${lang === 'js'
                     ? html`
-                        <h1>Join or start a <span class='brand'>jsb.ee</span> game</h1>
-                        <p>or <a href='http://pyb.ee/' class='pybee'>play pyb.ee</a> instead</p>
+                        <h1>Join or start a <span class='brand'>jsbee</span> game</h1>
+                        <p>or <a href='http://pyb.ee/' class='pybee'>play pybee</a> instead</p>
                     `
                     : html`
                         <h1>Join or start a <span class='brand'>pybee</span> game</h1>
