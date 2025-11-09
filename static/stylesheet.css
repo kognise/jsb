@@ -164,13 +164,14 @@ button {
             position: absolute;
         }
 
-        &:has(:focus-visible) {
-            outline: 2px solid var(--theme-darker);
-            outline-offset: 2px;
-        }
-
         &:has(:checked) {
             border-color: var(--theme);
+        }
+
+        &:has(:focus-visible) {
+            border-color: #222222;
+            outline: 2px solid var(--theme);
+            outline-offset: 2px;
         }
     }
 }

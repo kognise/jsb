@@ -78,7 +78,6 @@ interface ClientGameState {
     yourPlayer: number
     timerEnd: number
     submissionState: SubmissionState
-    submissionEndingPlayer: number | null
     fullString: string | null
     error: string | null
     mode: Mode
@@ -97,7 +96,6 @@ interface Room {
     fullString: string
     timerEnd: number
     submissionState: SubmissionState
-    submissionEndingPlayer: number | null
     error: string | null
     playersSeen: Record<string, Set<string>>
     previousQuestions: Set<string>
@@ -134,7 +132,6 @@ function stateFromRoom(room: Room, id: string): ClientGameState {
         yourPlayer: room.playerSockets.indexOf(id),
         timerEnd: room.timerEnd,
         submissionState: room.submissionState,
-        submissionEndingPlayer: room.submissionEndingPlayer,
         fullString: (room.submissionState === 'correct' || room.submissionState === 'incorrect' || room.submissionState === 'timedOut' || room.submissionState === 'timedOutCorrect')
             ? room.fullString : null,
         error: room.error,
@@ -244,7 +241,6 @@ app.get('/ws', upgradeWebSocket(() => {
                             lastLetter: null,
                             fullString: '',
                             submissionState: 'notStarted',
-                            submissionEndingPlayer: null,
                             timerEnd: 0,
                             error: null,
                             previousQuestions: new Set(),
@@ -287,10 +283,8 @@ app.get('/ws', upgradeWebSocket(() => {
                     broadcastRoomState(room)
 
                     room.error = await verifyCode(room)
-                    room.submissionState = room.error ? 'incorrect' : 'correct'
-                    if (room.mode === 'competitive') {
-                        room.submissionEndingPlayer = room.playerSockets.indexOf(id)
-                    }
+                    // room.submissionState = room.error ? 'incorrect' : 'correct'
+                    room.submissionState = 'correct'
                     broadcastRoomState(room)
                     loadQuestion(room)
                 } else if (data.kind === 'play') {

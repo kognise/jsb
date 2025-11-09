@@ -92,7 +92,13 @@ function App() {
 
                     if (thisState !== prevState) {
                         if (thisState === 'correct' || thisState === 'timedOutCorrect') {
-                            doConfetti()
+                            if (gameState?.mode === 'competitive') {
+                                if (gameState?.lastLetter?.player === gameState?.yourPlayer) {
+                                    doConfetti()
+                                }
+                            } else {
+                                doConfetti()
+                            }
                         }
 
                         if (thisState === 'correct' || thisState === 'incorrect' || thisState === 'timedOut' || thisState === 'timedOutCorrect') {
@@ -225,7 +231,7 @@ function App() {
 
     if (gameState.submissionState === 'correct') {
         if (gameState.mode === 'competitive') {
-            if (gameState.submissionEndingPlayer === gameState.yourPlayer) {
+            if (gameState.lastLetter?.player === gameState.yourPlayer) {
                 return html`
                     <div class='game-status'>
                         <h1>You won!</h1>
