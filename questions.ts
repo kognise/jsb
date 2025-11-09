@@ -883,7 +883,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function f(arr) that returns true if the array forms an arithmetic sequence.',
+        question: 'Write a function f(arr) that returns true if the array forms an arithmetic sequence (the distance between each number is constant).',
         testCases: [
             { args: [[1, 3, 5, 7]], result: true },
             { args: [[2, 4, 6, 8]], result: true },

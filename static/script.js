@@ -4,7 +4,7 @@ import { useState, useEffect } from 'https://esm.sh/preact/hooks'
 import htm from 'https://esm.sh/htm'
 import confetti from 'https://esm.sh/canvas-confetti'
 
-const lang = 'js'
+const lang = window.location.host.split('b.')[0]
 
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
@@ -93,7 +93,7 @@ function App() {
                     if (thisState !== prevState) {
                         if (thisState === 'correct' || thisState === 'timedOutCorrect') {
                             if (gameState?.mode === 'competitive') {
-                                if (gameState?.lastLetter?.player === gameState?.yourPlayer) {
+                                if (gameState?.submittingPlayer === gameState?.yourPlayer) {
                                     doConfetti()
                                 }
                             } else {
@@ -168,12 +168,12 @@ function App() {
             }}>
                 ${lang === 'js'
                     ? html`
-                        <h1>Join or start a <span class='brand'>jsbee</span> game</h1>
-                        <p>or <a href='#' class='pybee'>play pybee</a> instead</p>
+                        <h1>Join or start a <span class='brand'>jsb.ee</span> game</h1>
+                        <p>or <a href='http://pyb.ee/' class='pybee'>play pyb.ee</a> instead</p>
                     `
                     : html`
                         <h1>Join or start a <span class='brand'>pybee</span> game</h1>
-                        <p>or <a href='#' class='jsbee'>play jsbee</a> instead</p>
+                        <p>or <a href='http://jsb.ee/' class='jsbee'>play jsbee</a> instead</p>
                     `}
                 <p>
                     You and N friends (N >= 0) have 3 minutes to write a simple function, but there's a twist: you alternate typing one character at a time, and you can't see what you've written until you submit the code... or run out of time.
@@ -234,7 +234,7 @@ function App() {
 
     if (gameState.submissionState === 'correct') {
         if (gameState.mode === 'competitive') {
-            if (gameState.lastLetter?.player === gameState.yourPlayer) {
+            if (gameState.submittingPlayer === gameState.yourPlayer) {
                 return html`
                     <div class='game-status'>
                         <h1>You won!</h1>

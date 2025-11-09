@@ -51,6 +51,7 @@ interface ClientGameState {
     yourPlayer: number
     timerEnd: number
     submissionState: SubmissionState
+    submittingPlayer: number | null
     fullString: string | null
     error: string | null
     mode: Mode
@@ -69,6 +70,7 @@ interface Room {
     fullString: string
     timerEnd: number
     submissionState: SubmissionState
+    submittingPlayer: number | null
     error: string | null
     playersSeen: Record<string, Set<string>>
     previousQuestions: Set<string>
@@ -105,6 +107,7 @@ function stateFromRoom(room: Room, id: string): ClientGameState {
         yourPlayer: room.playerSockets.indexOf(id),
         timerEnd: room.timerEnd,
         submissionState: room.submissionState,
+        submittingPlayer: room.submittingPlayer,
         fullString: (room.submissionState === 'correct' || room.submissionState === 'incorrect' || room.submissionState === 'timedOut' || room.submissionState === 'timedOutCorrect')
             ? room.fullString : null,
         error: room.error,
@@ -157,24 +160,41 @@ function loadQuestion(room: Room) {
     return loadQuestion(room)
 }
 
+function pythonify(arg: unknown): string {
+    const trueUid = randomUUIDv7()
+    const falseUid = randomUUIDv7()
+    return JSON.stringify(arg, (_k, v) => typeof v === 'boolean' ? v ? trueUid : falseUid : v)
+        .replaceAll(`"${trueUid}"`, 'True')
+        .replaceAll(`"${falseUid}"`, 'False')
+}
+
 // Returns an error string if it failed
 async function verifyCode(room: Room): Promise<string | null> {
     for (const testCase of room.question.testCases) {
-        const code = `${room.fullString}
-            ; console.log(JSON.stringify(f(${JSON.stringify(testCase.args).slice(1, -1)})))`
+        const code = room.lang === 'js'
+            ? `${room.fullString}\n\nconsole.log(JSON.stringify(f(${JSON.stringify(testCase.args).slice(1, -1)})))`
+            : `${room.fullString}
 
-        const result = await pistonClient.execute('javascript', code)
+import json
+print(json.dumps(f(${pythonify(testCase.args).slice(1, -1)})))`
 
-        if (result.success) {
+        const result = await pistonClient.execute(room.lang === 'js' ? 'javascript' : 'python', code)
+
+        if (result.run.code === 0) {
             const data = JSON.parse(result.run.stdout.trim().split('\n').at(-1))
             if (!deepEquals(data, testCase.result)) {
-                const called = 'f(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
-                const expected = inspect(testCase.result, { compact: true })
-                const actual = inspect(data, { compact: true })
+                const _inspect = (thing: unknown) => room.lang === 'js' ? inspect(thing, { compact: true }) : pythonify(thing)
+                const called = 'f(' + testCase.args.map((arg) => _inspect(arg)).join(', ') + ')'
+                const expected = _inspect(testCase.result)
+                const actual = _inspect(data)
                 return `Incorrect result for ${called}. Expected: ${expected}, got: ${actual}`
             }
+        } else if (result.run.signal) {
+            return result.run.signal
         } else {
-            const error = result.run.stderr.split('\n')[4]
+            const error = room.lang === 'js'
+                ? result.run.stderr.split('\n')[4]
+                : result.run.stderr.trim().split('\n').at(-1)
             return error
         }
     }
@@ -214,6 +234,7 @@ app.get('/ws', upgradeWebSocket(() => {
                             lastLetter: null,
                             fullString: '',
                             submissionState: 'notStarted',
+                            submittingPlayer: null,
                             timerEnd: 0,
                             error: null,
                             previousQuestions: new Set(),
@@ -257,6 +278,7 @@ app.get('/ws', upgradeWebSocket(() => {
 
                     room.error = await verifyCode(room)
                     room.submissionState = room.error ? 'incorrect' : 'correct'
+                    room.submittingPlayer = room.playerSockets.indexOf(id)
                     broadcastRoomState(room)
                     loadQuestion(room)
                 } else if (data.kind === 'play') {
