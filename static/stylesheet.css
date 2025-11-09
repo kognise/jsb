@@ -39,6 +39,7 @@ body {
     align-items: center;
     justify-content: center;
     height: 100dvh;
+    overflow: hidden;
 }
 
 input, button {
