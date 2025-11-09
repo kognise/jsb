@@ -1,8 +1,7 @@
 {
   "dependencies": {
-    "@jitl/quickjs-ng-wasmfile-release-sync": "^0.31.0",
-    "@sebastianwessel/quickjs": "^3.0.0",
     "hono": "^4.10.4",
+    "piston-client": "^1.0.2",
     "zod": "^4.1.12"
   },
   "name": "jsb",

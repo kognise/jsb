@@ -4,37 +4,10 @@ import { serveStatic, upgradeWebSocket, websocket } from 'hono/bun'
 import type { WSContext } from 'hono/ws'
 import { questions, type Question } from './questions'
 import z from 'zod'
-import { type SandboxOptions, loadQuickJs } from '@sebastianwessel/quickjs'
-import variant from '@jitl/quickjs-ng-wasmfile-release-sync'
+// @ts-ignore
+import piston from 'piston-client'
 
-const { runSandboxed } = await loadQuickJs(variant)
-
-const options: SandboxOptions = {
-    allowFetch: false,
-    allowFs: false,
-    console: {
-        log: () => {},
-        error: () => {},
-        warn: () => {},
-        info: () => {},
-        debug: () => {},
-        trace: () => {},
-        assert: () => {},
-        count: () => {},
-        countReset: () => {},
-        dir: () => {},
-        dirxml: () => {},
-        group: () => {},
-        groupCollapsed: () => {},
-        groupEnd: () => {},
-        table: () => {},
-        time: () => {},
-        timeEnd: () => {},
-        timeLog: () => {},
-        clear: () => { },
-    },
-    // memoryLimit - what format is this?
-}
+const pistonClient = piston({ server: 'https://emkc.org/' })
 
 const app = new Hono()
 
@@ -188,21 +161,21 @@ function loadQuestion(room: Room) {
 async function verifyCode(room: Room): Promise<string | null> {
     for (const testCase of room.question.testCases) {
         const code = `${room.fullString}
-            ; return f(${testCase.args.join(', ')})`
+            ; console.log(JSON.stringify(f(${JSON.stringify(testCase.args).slice(1, -1)})))`
 
-        const sandboxResult = await runSandboxed(async ({ evalCode }) => {
-            return await evalCode(code)
-        }, options)
+        const result = await pistonClient.execute('javascript', code)
 
-        if (sandboxResult.ok) {
-            if (!deepEquals(sandboxResult.data, testCase.result)) {
+        if (result.success) {
+            const data = JSON.parse(result.run.stdout.trim().split('\n').at(-1))
+            if (!deepEquals(data, testCase.result)) {
                 const called = 'f(' + testCase.args.map((arg) => inspect(arg, { compact: true })).join(', ') + ')'
                 const expected = inspect(testCase.result, { compact: true })
-                const actual = inspect(sandboxResult.data, { compact: true })
+                const actual = inspect(data, { compact: true })
                 return `Incorrect result for ${called}. Expected: ${expected}, got: ${actual}`
             }
         } else {
-            return `${sandboxResult.error.name}: ${sandboxResult.error.message}`
+            const error = result.run.stderr.split('\n')[4]
+            return error
         }
     }
     return null
@@ -283,8 +256,7 @@ app.get('/ws', upgradeWebSocket(() => {
                     broadcastRoomState(room)
 
                     room.error = await verifyCode(room)
-                    // room.submissionState = room.error ? 'incorrect' : 'correct'
-                    room.submissionState = 'correct'
+                    room.submissionState = room.error ? 'incorrect' : 'correct'
                     broadcastRoomState(room)
                     loadQuestion(room)
                 } else if (data.kind === 'play') {

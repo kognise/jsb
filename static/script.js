@@ -195,8 +195,8 @@ function App() {
     if (gameState.submissionState === 'notStarted') {
         return html`
             <div class='game-status'>
-                <h1>Waiting for players</h1>
-                <p>Start the game whenever you're ready.</p>
+                <h1>Ready up</h1>
+                <p>Start the game as soon as everyone has joined.</p>
                 <p>Player count: ${gameState.playerCount}</p>
                 <div class='mode-selector'>
                     <label>
@@ -210,13 +210,16 @@ function App() {
                         <input id='mode-competitive' type='radio' name='mode' value='competitive' />
                         <div>
                             <p class='title'>Competitive mode</p>
-                            <p class='description'>The person who types the last character wins.</p>
+                            <p class='description'>Whoever typed the last character wins.</p>
                         </div>
                     </label>
                 </div>
-                <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play', mode: document.getElementById('mode-normal').checked ? 'normal' : 'competitive' })) }}>
-                    Start game
-                </button>
+
+                <div class='button-group'>
+                    <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play', mode: document.getElementById('mode-normal').checked ? 'normal' : 'competitive' })) }}>
+                        Start game
+                    </button>
+                </div>
             </div>
         `
     }
