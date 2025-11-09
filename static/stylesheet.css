@@ -177,6 +177,16 @@ button {
                 background: #222222;
                 pointer-events: none;
                 animation: slide-out var(--speed) var(--easing);
+
+                .cursor {
+                    position: absolute;
+                    margin-top: 1em;
+                    height: 14px;
+                    width: 1ch;
+                    background: currentColor;
+                    opacity: 0.5;
+                    animation: 1.25s blink infinite linear;
+                }
             }
 
             .you {
@@ -202,7 +212,7 @@ button {
             }
 
             &.animate .fg {
-                --speed: 250ms;
+                --speed: 200ms;
             }
 
             .submit {
@@ -245,6 +255,14 @@ button {
         --left: 100%;
         --right: 100%;
     }
+}
+
+@keyframes blink {
+    0% { opacity: 0; }
+    10% { opacity: 0.5; }
+    60% { opacity: 0.5; }
+    70% { opacity: 0; }
+    100% { opacity: 0; }
 }
 
 ::selection {

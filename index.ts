@@ -22,7 +22,7 @@ type ServerMessage =
 
 type WS = WSContext<unknown>
 
-type SubmissionState = 'notStarted' | 'inGame' | 'submitting' | 'correct' | 'incorrect' | 'timedOut'
+type SubmissionState = 'notStarted' | 'inGame' | 'submitting' | 'correct' | 'incorrect' | 'timedOut' | 'timedOutCorrect'
 
 interface ClientGameState {
     playerCount: number
@@ -79,7 +79,7 @@ function stateFromRoom(room: Room, id: string): ClientGameState {
         yourPlayer: room.playerSockets.indexOf(id),
         timerEnd: room.timerEnd,
         submissionState: room.submissionState,
-        fullString: (room.submissionState === 'correct' || room.submissionState === 'incorrect' || room.submissionState === 'timedOut')
+        fullString: (room.submissionState === 'correct' || room.submissionState === 'incorrect' || room.submissionState === 'timedOut' || room.submissionState === 'timedOutCorrect')
             ? room.fullString : null,
         error: room.error,
     }
@@ -241,9 +241,16 @@ app.get('/ws', upgradeWebSocket(() => {
                 const timer = 1000 * 60 * 3 // 3 minutes
                 room.timerEnd = Date.now() + timer
                 if (room.timerTimeout !== null) clearTimeout(room.timerTimeout)
-                room.timerTimeout = setTimeout(() => {
+                room.timerTimeout = setTimeout(async () => {
                     if (room.submissionState === 'inGame') {
-                        room.submissionState = 'timedOut'
+                        const error = await verifyCode(room)
+                        if (error) {
+                            room.submissionState = 'timedOut'
+                        } else {
+                            room.error = null
+                            room.submissionState = 'timedOutCorrect'
+                        }
+
                         broadcastRoomState(room)
                         void loadQuestion(room)
                     }

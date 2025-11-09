@@ -83,17 +83,17 @@ function App() {
                     const thisState = json.gameState?.submissionState
 
                     if (thisState !== prevState) {
-                        if (thisState === 'correct') {
+                        if (thisState === 'correct' || thisState === 'timedOutCorrect') {
                             doConfetti()
                         }
 
-                        if (thisState === 'correct' || thisState === 'incorrect' || thisState === 'timedOut') {
+                        if (thisState === 'correct' || thisState === 'incorrect' || thisState === 'timedOut' || thisState === 'timedOutCorrect') {
                             seen.add(json.question)
                             writeSeen()
                         }
 
                         if (thisState === 'inGame') {
-                            setTimeout(() => setIsAnimating(true), 250)
+                            setTimeout(() => setIsAnimating(true), 200)
                         } else {
                             setIsAnimating(false)
                         }
@@ -143,6 +143,7 @@ function App() {
         return html`
             <form class='join-container' onSubmit=${(event) => {
                 event.preventDefault()
+                if (roomCode.length === 0) return
                 setIsConnecting(true)
                 ws.send(JSON.stringify({
                     kind: 'joinRoom',
@@ -193,6 +194,19 @@ function App() {
                 <p>Your code did the right thing!</p>
                 <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
                     Play a new challenge
+                </button>
+                <pre>${h('code', null, gameState.fullString)}</pre>
+            </div>
+        `
+    }
+
+    if (gameState.submissionState === 'timedOutCorrect') {
+        return html`
+            <div class='game-status'>
+                <h1>Somehow, you scraped by</h1>
+                <p>You ran out of time, but your code was right! You'll get the pass this time...</p>
+                <button onClick=${() => { ws.send(JSON.stringify({ kind: 'play' })) }}>
+                    Play again!
                 </button>
                 <pre>${h('code', null, gameState.fullString)}</pre>
             </div>
@@ -250,6 +264,7 @@ function App() {
                         <div class='fg'>
                             ${gameState.lastLetter?.player === i && formatLetter(gameState.lastLetter.letter)}
                             ${gameState.yourPlayer === i && html`<div class='you'>You</div>`}
+                            ${gameState.currentPlayer === i && html`<div class='cursor'></div>`}
                         </div>
 
                         ${gameState.yourPlayer === i && gameState.currentPlayer === i && html`
