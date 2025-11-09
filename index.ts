@@ -6,6 +6,7 @@ import { questions, type Question } from './questions'
 import z from 'zod'
 // @ts-ignore
 import piston from 'piston-client'
+import { execute } from './piston'
 
 const pistonClient = piston({ server: 'http://how-did-i-get-here.net:2000/' })
 
@@ -178,7 +179,7 @@ async function verifyCode(room: Room): Promise<string | null> {
 import json
 print(json.dumps(f(${pythonify(testCase.args).slice(1, -1)})))`
 
-        const result = await pistonClient.execute(room.lang === 'js' ? 'javascript' : 'python', code)
+        const result = await execute(room.lang === 'js' ? 'javascript' : 'python', code)
 
         console.log(result)
         if (result.run.code === 0) {
