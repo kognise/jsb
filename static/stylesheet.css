@@ -365,6 +365,7 @@ button {
     color: #000000;
     width: 100%;
     display: none;
+    user-select: none;
 
     .simple-keyboard.hg-theme-default {
         border-radius: 0;
@@ -390,6 +391,20 @@ button {
 @media (pointer: coarse) and (hover: none) {
     .keyboard {
         display: block;
+    }
+}
+
+@media (max-width: 500px) {
+    .game {
+        .header {
+            font-size: 1rem;
+        }
+
+        .players {
+            .player {
+                font-size: 12rem;
+            }
+        }
     }
 }
 
