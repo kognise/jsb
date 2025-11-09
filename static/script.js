@@ -68,6 +68,7 @@ function App() {
     const [ roomCode, setRoomCode ] = useState('')
     const [ isConnecting, setIsConnecting ] = useState(false)
     const [ gameState, setGameState ] = useState(null)
+    const [ isAnimating, setIsAnimating ] = useState(false)
     const [ _, _render ] = useState(null)
 
     useEffect(() => {
@@ -78,17 +79,26 @@ function App() {
             if (json.kind === 'gameState') {
                 setIsConnecting(false)
                 setGameState((gameState) => {
-                    if (json.gameState?.submissionState === 'correct' && gameState?.submissionState !== 'correct') {
-                        doConfetti()
-                        seen.add(json.question)
-                        writeSeen()
-                    } else if (json.gameState?.submissionState === 'incorrect' && gameState?.submissionState !== 'incorrect') {
-                        seen.add(json.question)
-                        writeSeen()
-                    } else if (json.gameState?.submissionState === 'timedOut' && gameState?.submissionState !== 'timedOut') {
-                        seen.add(json.question)
-                        writeSeen()
+                    const prevState = gameState?.submissionState
+                    const thisState = json.gameState?.submissionState
+
+                    if (thisState !== prevState) {
+                        if (thisState === 'correct') {
+                            doConfetti()
+                        }
+
+                        if (thisState === 'correct' || thisState === 'incorrect' || thisState === 'timedOut') {
+                            seen.add(json.question)
+                            writeSeen()
+                        }
+
+                        if (thisState === 'inGame') {
+                            setTimeout(() => setIsAnimating(true), 250)
+                        } else {
+                            setIsAnimating(false)
+                        }
                     }
+
                     return json.gameState
                 })
             }
@@ -232,8 +242,15 @@ function App() {
                         player
                         ${gameState.yourPlayer === i ? 'is-you' : ''}
                         ${gameState.currentPlayer === i ? 'is-current' : ''}
+                        ${isAnimating ? 'animate' : ''}
                     ' key=${i}>
                         ${gameState.lastLetter?.player === i && formatLetter(gameState.lastLetter.letter)}
+                        ${gameState.yourPlayer === i && html`<div class='you'>You</div>`}
+
+                        <div class='fg'>
+                            ${gameState.lastLetter?.player === i && formatLetter(gameState.lastLetter.letter)}
+                            ${gameState.yourPlayer === i && html`<div class='you'>You</div>`}
+                        </div>
 
                         ${gameState.yourPlayer === i && gameState.currentPlayer === i && html`
                             <button class='submit' onClick=${() => {
