@@ -1,17 +1,18 @@
 {
-  "dependencies": {
-    "hono": "^4.10.4",
-    "piston-client": "^1.0.2",
-    "zod": "^4.1.12"
-  },
-  "name": "jsb",
-  "module": "index.js",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+    "dependencies": {
+        "hono": "^4.10.4",
+        "piston-client": "^1.0.2",
+        "zod": "^4.1.12"
+    },
+    "name": "jsb",
+    "module": "index.js",
+    "type": "module",
+    "private": true,
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "license": "AGPL-3.0-only"
 }
