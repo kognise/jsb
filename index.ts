@@ -180,6 +180,7 @@ print(json.dumps(f(${pythonify(testCase.args).slice(1, -1)})))`
 
         const result = await pistonClient.execute(room.lang === 'js' ? 'javascript' : 'python', code)
 
+        console.log(result)
         if (result.run.code === 0) {
             const data = JSON.parse(result.run.stdout.trim().split('\n').at(-1))
             if (!deepEquals(data, testCase.result)) {
