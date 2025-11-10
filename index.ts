@@ -216,6 +216,13 @@ print(json.dumps(f(${pythonify(testCase.args).slice(1, -1)})))`
 
 app.use('*', serveStatic({ root: './static' }))
 
+app.get('/stats', (c) => {
+    return c.text(`
+Connections:  ${Object.keys(wsById).length}
+Active games: ${Object.keys(rooms.js).length} JS + ${Object.keys(rooms.py).length} PY = ${Object.keys(rooms.py).length + Object.keys(rooms.js).length}
+    `.trim())
+})
+
 app.get('/ws', upgradeWebSocket(() => {
     let heartbeatTimeout: Timer
 
@@ -333,7 +340,6 @@ app.get('/ws', upgradeWebSocket(() => {
         onClose: (_event, ws) => {
             try {
                 wsById[id] = ws
-                console.log('Connection closed')
                 leaveRoom(id)
                 delete wsById[id]
             } catch (error) {

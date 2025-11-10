@@ -6,7 +6,6 @@ import confetti from 'https://esm.sh/canvas-confetti@1.9.4'
 import { Keyboard } from './keyboard.js'
 
 const html = htm.bind(h)
-
 const lang = window.location.host.startsWith('py') ? 'py' : 'js'
 
 // Set theme
@@ -14,8 +13,17 @@ document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
 
 // Render SEO metadata
+const canonical = `https://${lang}bee.kognise.dev/`
+const description = `The ${lang === 'js' ? 'JavaScript' : 'Python'} game with a twist: you have 3 minutes to solve a challenge with your friends, but you only get one character at a time. Can you write working code before the time runs out?`
 render(html`
-    <title>${lang === 'js' ? 'jsbee' : 'pybee'}</title>
+    <title>${lang}bee</title>
+    <link rel='icon' href='/bees/icon-${lang}.png' />
+    <link rel='canonical' href=${canonical} />
+    <meta name='description' content=${description} />
+    <meta property='og:description' content=${description} />
+    <meta property='og:title' content='${lang}bee' />
+    <meta property='og:type' content='website' />
+    <meta property='og:url' content=${canonical} />
 `, document.head)
 
 // Start everything else!
