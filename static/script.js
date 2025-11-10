@@ -1,6 +1,6 @@
 import ReconnectingWebSocket from 'https://esm.sh/@opensumi/reconnecting-websocket@4.4.0'
 import { h, render } from 'https://esm.sh/preact@10.27.2'
-import { useState, useEffect } from 'https://esm.sh/preact@10.27.2/hooks'
+import { useState, useEffect, useRef } from 'https://esm.sh/preact@10.27.2/hooks'
 import htm from 'https://esm.sh/htm@3.1.1'
 import confetti from 'https://esm.sh/canvas-confetti@1.9.4'
 import { Keyboard } from './keyboard.js'
@@ -9,9 +9,16 @@ const html = htm.bind(h)
 
 const lang = window.location.host.startsWith('py') ? 'py' : 'js'
 
+// Set theme
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
 
+// Render SEO metadata
+render(html`
+    <title>${lang === 'js' ? 'jsbee' : 'pybee'}</title>
+`, document.head)
+
+// Start everything else!
 const ws = new ReconnectingWebSocket('/ws')
 
 const seen = new Set()
@@ -72,6 +79,120 @@ function doConfetti() {
             requestAnimationFrame(frame)
         }
     }())
+}
+
+// const useAnimationFrame = (callback) => {
+//     const requestRef = useRef()
+//     const previousTimeRef = useRef()
+
+//     const animate = (time) => {
+//         if (previousTimeRef.current !== undefined) {
+//         const deltaTime = time - previousTimeRef.current
+//             callback(deltaTime)
+//         }
+//         previousTimeRef.current = time
+//         requestRef.current = requestAnimationFrame(animate)
+//     };
+
+//     useEffect(() => {
+//         requestRef.current = requestAnimationFrame(animate)
+//         return () => cancelAnimationFrame(requestRef.current)
+//     }, [])
+// }
+
+const beeSpeed = 0.1
+const deltaTime = 60
+const safeArea = 80
+const initialPosition = {
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+}
+function Bee() {
+    const goal = useRef(initialPosition)
+    const [ pos, setPos ] = useState(initialPosition)
+    const [ dir, setDir ] = useState('left') // left | right
+    const [ isFlying, setIsFlying ] = useState(true)
+    const [ isDead, setIsDead ] = useState(false)
+
+    useEffect(() => {
+        const onMove = (event) => {
+            if (event.target?.classList.contains('jsbee') || event.target?.classList.contains('pybee')) {
+                goal.current = {
+                    x: event.target.offsetLeft + 10,
+                    y: event.target.offsetTop - 35,
+                    isDead: true,
+                }
+            } else {
+                goal.current = { x: event.clientX, y: event.clientY }
+            }
+        }
+
+        window.addEventListener('mousemove', onMove)
+        return () => window.removeEventListener('mousemove', onMove)
+    }, [])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setPos((pos) => {
+                const diff = {
+                    x: goal.current.x - pos.x,
+                    y: goal.current.y - pos.y,
+                }
+
+                setIsDead(false)
+                if (goal.current.isDead) {
+                    setIsFlying(true)
+
+                    if (diff.x === 0 && diff.y === 0) {
+                        setIsDead(true)
+                        return pos
+                    }
+                } else {
+                    if (Math.abs(diff.x) <= safeArea && Math.abs(diff.y) <= safeArea) {
+                        setIsFlying(false)
+                        return pos
+                    } else {
+                        setIsFlying(true)
+                    }
+                }
+
+                const newPos = {
+                    x: pos.x + Math.min(Math.abs(diff.x), beeSpeed * deltaTime) * Math.sign(diff.x),
+                    y: pos.y + Math.min(Math.abs(diff.y), beeSpeed * deltaTime) * Math.sign(diff.y),
+                }
+
+                if (newPos.x > pos.x) {
+                    setDir('right')
+                } else if (newPos.x < pos.x) {
+                    setDir('left')
+                }
+
+                if (newPos.x === pos.x && newPos.y === pos.y) {
+                    return pos
+                } else {
+                    return newPos
+                }
+            })
+        }, deltaTime)
+
+        return () => clearInterval(interval)
+    }, [])
+
+    return html`
+        <img
+            class='bee'
+            src=${`/bees/${isDead ? 'dead' : isFlying ? 'flying' : 'idle'}.gif`}
+            width=${30}
+            style=${{
+                transform: dir === 'left'
+                    ? isDead ? 'scale(1.5)' : ''
+                    : isDead ? 'scaleX(-1.5) scaleY(1.5)' : 'scaleX(-1)',
+                filter: lang === 'py' ? 'hue-rotate(175deg)' : '',
+                top: `${pos.y}px`,
+                left: `${pos.x}px`,
+            }}
+        />
+    `
 }
 
 function App() {
@@ -161,6 +282,7 @@ function App() {
 
     if (!gameState) {
         return html`
+            <${Bee} />
             <form class='join-container' onSubmit=${(event) => {
                 event.preventDefault()
                 if (roomCode.length === 0) return

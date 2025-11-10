@@ -20,6 +20,15 @@
     inherits: false;
 }
 
+.bee {
+    display: block;
+    image-rendering: pixelated;
+    position: fixed;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+}
+
 *, *::before, *::after {
     box-sizing: inherit;
 }
@@ -393,6 +402,10 @@ button {
 @media (pointer: coarse) and (hover: none) {
     .keyboard {
         display: block;
+    }
+
+    .bee {
+        display: none;
     }
 }
 
