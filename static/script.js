@@ -7,7 +7,7 @@ import { Keyboard } from './keyboard.js'
 
 const html = htm.bind(h)
 
-const lang = window.location.host === 'pybee.kognise.dev' ? 'py' : 'js'
+const lang = window.location.host.startsWith('py') ? 'py' : 'js'
 
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
@@ -175,11 +175,11 @@ function App() {
                 ${lang === 'js'
                     ? html`
                         <h1>Join or start a <span class='brand'>jsbee</span> game</h1>
-                        <p>or <a href='https://pybee.kognise.dev/' class='pybee'>play pybee</a> instead</p>
+                        <p>or <a href='${window.location.protocol}//${window.location.host.replace('js', 'py')}/' class='pybee'>play pybee</a> instead</p>
                     `
                     : html`
                         <h1>Join or start a <span class='brand'>pybee</span> game</h1>
-                        <p>or <a href='https://jsbee.kognise.dev/' class='jsbee'>play jsbee</a> instead</p>
+                        <p>or <a href='${window.location.protocol}//${window.location.host.replace('py', 'js')}/' class='jsbee'>play jsbee</a> instead</p>
                     `}
                 <p>
                     You and N friends (N >= 0) have 3 minutes to write a simple function, but there's a twist: you alternate typing one character at a time, and you can't see what you've written until you submit the code... or run out of time.
