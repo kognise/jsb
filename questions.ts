@@ -333,7 +333,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function f(str) that checks if a string starts with a specific character.',
+        question: 'Write a function f(str, char) that checks if a string starts with a specific character.',
         testCases: [
             { args: ['hello', 'h'], result: true },
             { args: ['world', 'w'], result: true },
@@ -343,7 +343,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function f(str) that checks if a string ends with a specific character.',
+        question: 'Write a function f(str, char) that checks if a string ends with a specific character.',
         testCases: [
             { args: ['hello', 'o'], result: true },
             { args: ['world', 'd'], result: true },
@@ -383,7 +383,7 @@ export const questions: Question[] = [
         ]
     },
     {
-        question: 'Write a function f(arr) that checks if an array contains a specific value.',
+        question: 'Write a function f(arr, value) that checks if an array contains a specific value.',
         testCases: [
             { args: [[1, 2, 3], 2], result: true },
             { args: [['a', 'b'], 'c'], result: false },
