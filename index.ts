@@ -160,16 +160,31 @@ function loadQuestion(room: Room) {
 function pythonify(arg: unknown): string {
     const trueUid = randomUUIDv7()
     const falseUid = randomUUIDv7()
-    return JSON.stringify(arg, (_k, v) => typeof v === 'boolean' ? v ? trueUid : falseUid : v)
-        .replaceAll(`"${trueUid}"`, 'True')
-        .replaceAll(`"${falseUid}"`, 'False')
+    const nullUid = randomUUIDv7()
+    return JSON.stringify(arg, (_k, v) => {
+        if (typeof v === 'boolean') return v ? trueUid : falseUid
+        if (v === null || v === undefined) return nullUid
+        return v
+    })
+    .replaceAll(`"${trueUid}"`, 'True')
+    .replaceAll(`"${falseUid}"`, 'False')
+    .replaceAll(`"${nullUid}"`, 'None')
+}
+
+function jsify(arg: unknown): string {
+    const undefinedUid = randomUUIDv7()
+    return JSON.stringify(arg, (_k, v) => {
+        if (v === undefined) return undefinedUid
+        return v
+    })
+    .replaceAll(`"${undefinedUid}"`, 'undefined')
 }
 
 // Returns an error string if it failed
 async function verifyCode(room: Room): Promise<string | null> {
     for (const testCase of room.question.testCases) {
         const code = room.lang === 'js'
-            ? `${room.fullString}\n\nconsole.log(JSON.stringify(f(${JSON.stringify(testCase.args).slice(1, -1)})))`
+            ? `${room.fullString}\n\nconsole.log(JSON.stringify(f(${jsify(testCase.args).slice(1, -1)})))`
             : `${room.fullString}
 
 import json
