@@ -1,6 +1,7 @@
 {
     "scripts": {
-        "start": "bun index.ts"
+        "prod": "PORT=80 NODE_ENV=production bun index.ts",
+        "dev": "bun --watch index.ts"
     },
     "dependencies": {
         "hono": "^4.10.4",
