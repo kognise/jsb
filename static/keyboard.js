@@ -129,6 +129,10 @@ export function Keyboard(props) {
         <div
             class='keyboard'
             ref=${keyboardRef}
+            onTouchStart=${(event) => {
+                // Required to disable hold press haptic
+                event.preventDefault()
+            }}
             onPointerDown=${(event) => {
                 event.preventDefault()
                 keyboardRef.current.setPointerCapture(event.pointerId)
@@ -139,6 +143,7 @@ export function Keyboard(props) {
             }}
             onPointerUp=${(event) => {
                 event.preventDefault()
+                event.stopPropagation()
                 keyboardRef.current.releasePointerCapture(event.pointerId)
                 onKey()
                 setActiveKey(null)
