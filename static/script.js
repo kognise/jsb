@@ -194,6 +194,7 @@ function Bee() {
     return bees.map((bee) => html`
         <img
             key=${bee}
+            alt=''
             class='bee'
             src=${`/bees/${bee}.gif`}
             width=${30}
