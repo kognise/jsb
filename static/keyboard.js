@@ -88,7 +88,7 @@ function haptic() {
 export function Keyboard(props) {
     const [ isShift, setIsShift ] = useState(false)
     const [ layoutName, setLayoutName ] = useState('default')
-    const [ activeKey, setActiveKey ] = useState('y')
+    const [ activeKey, setActiveKey ] = useState()
     const [ pointerDownTime, setPointerDownTime ] = useState(0)
     const keyboardRef = useRef(null)
 
@@ -130,6 +130,7 @@ export function Keyboard(props) {
             class='keyboard'
             ref=${keyboardRef}
             onPointerDown=${(event) => {
+                event.preventDefault()
                 keyboardRef.current.setPointerCapture(event.pointerId)
                 setPointerDownTime(Date.now())
                 const key = findKey(event, keyboardRef)
@@ -137,9 +138,11 @@ export function Keyboard(props) {
                 if (key) haptic()
             }}
             onPointerUp=${(event) => {
+                event.preventDefault()
                 keyboardRef.current.releasePointerCapture(event.pointerId)
                 onKey()
                 setActiveKey(null)
+                setPointerDownTime(0)
             }}
             onPointerMove=${(event) => {
                 setActiveKey(findKey(event, keyboardRef))

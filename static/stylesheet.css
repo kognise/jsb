@@ -434,9 +434,9 @@ button {
                 color: #eeeeee;
 
                 .preview {
-                    --size: 50px;
+                    --size: 55px;
                     pointer-events: none;
-                    font-size: 22px;
+                    font-size: 26px;
                     position: absolute;
                     top: calc(var(--size) * -1 - 1.5px);
                     width: var(--size);
