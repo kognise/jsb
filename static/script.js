@@ -111,10 +111,9 @@ const initialPosition = {
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
 }
-function Bee() {
+function Bee({ pos, setPos }) {
     const goal = useRef(initialPosition)
     const leftSafeAreaAt = useRef(Date.now() - safeTime)
-    const [ pos, setPos ] = useState(initialPosition)
     const [ dir, setDir ] = useState('left') // left | right
     const [ isFlying, setIsFlying ] = useState(true)
     const [ isDead, setIsDead ] = useState(false)
@@ -223,6 +222,9 @@ function DisableScroll() {
 }
 
 function App() {
+    // hoisted to preserve bee state across state changes
+    const [ beePos, setBeePos ] = useState(initialPosition)
+
     const [ roomCode, setRoomCode ] = useState('')
     const [ isConnecting, setIsConnecting ] = useState(false)
     const [ gameState, setGameState ] = useState(null)
@@ -309,7 +311,7 @@ function App() {
 
     if (!gameState) {
         return html`
-            <${Bee} />
+            <${Bee} pos=${beePos} setPos=${setBeePos} />
             <form class='join-container' onSubmit=${(event) => {
                 event.preventDefault()
                 if (roomCode.length === 0) return
@@ -349,6 +351,7 @@ function App() {
 
     if (gameState.submissionState === 'notStarted') {
         return html`
+            <${Bee} pos=${beePos} setPos=${setBeePos} />
             <form class='game-status' onSubmit=${(event) => {
                 event.preventDefault()
                 ws.send(JSON.stringify({
@@ -385,6 +388,7 @@ function App() {
 
     if (gameState.submissionState === 'submitting') {
         return html`
+            <${Bee} pos=${beePos} setPos=${setBeePos} />
             <div class='game-status'>
                 <h1>Checking your code...</h1>
             </div>
@@ -395,6 +399,7 @@ function App() {
         if (gameState.mode === 'competitive') {
             if (gameState.submittingPlayer === gameState.yourPlayer) {
                 return html`
+                    <${Bee} pos=${beePos} setPos=${setBeePos} />
                     <div class='game-status'>
                         <h1>You won!!!</h1>
                         <p>The code works and YOU were the one to slam on the submit button.</p>
@@ -405,6 +410,7 @@ function App() {
                 `
             } else {
                 return html`
+                    <${Bee} pos=${beePos} setPos=${setBeePos} />
                     <div class='game-status'>
                         <h1>Your friends are better than you</h1>
                         <p>The code's right, at least! But someone else pressed submit.</p>
@@ -416,6 +422,7 @@ function App() {
             }
         } else {
             return html`
+                <${Bee} pos=${beePos} setPos=${setBeePos} />
                 <div class='game-status'>
                     <h1>alert('Good job!')</h1>
                     <p>Your code did the right thing!</p>
@@ -430,6 +437,7 @@ function App() {
 
     if (gameState.submissionState === 'timedOutCorrect') {
         return html`
+            <${Bee} pos=${beePos} setPos=${setBeePos} />
             <div class='game-status'>
                 <h1>Somehow, you scraped by</h1>
                 <p>You ran out of time, but your code was right! You'll get the pass this time...</p>
@@ -443,6 +451,7 @@ function App() {
 
     if (gameState.submissionState === 'incorrect') {
         return html`
+            <${Bee} pos=${beePos} setPos=${setBeePos} />
             <div class='game-status'>
                 <h1>Failed tests :(</h1>
                 <p>Looks like your code wasn't up to snuff. Better luck next time?!</p>
@@ -457,6 +466,7 @@ function App() {
 
     if (gameState.submissionState === 'timedOut') {
         return html`
+            <${Bee} pos=${beePos} setPos=${setBeePos} />
             <div class='game-status'>
                 <h1>Timer ran out</h1>
                 <p>Aw, you took too long. Best go take some Adderall before the next round.</p>
