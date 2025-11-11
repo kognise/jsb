@@ -229,6 +229,10 @@ app.get('/ws', upgradeWebSocket(() => {
     const id = randomUUIDv7()
 
     return {
+        async onOpen(_, ws) {
+            wsById[id] = ws
+            send(id, { kind: 'gameState', gameState: null })
+        },
         async onMessage(event, ws) {
             try {
                 wsById[id] = ws
