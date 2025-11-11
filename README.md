@@ -1,3 +1,3 @@
-**Play jsbee today @ [jsbee.kognise.dev](https://jsbee.kognise.dev/)!** (temporary url while we wait for the estonian government to approve jsb.ee)
+**Play jsbee today @ [jsb.ee](https://jsb.ee/)!**
 
-[![jsbee and pybee!](https://raw.githubusercontent.com/kognise/jsb/refs/heads/main/screenshot.png)](https://jsbee.kognise.dev/)
+[![jsbee and pybee!](https://raw.githubusercontent.com/kognise/jsb/refs/heads/main/screenshot.png)](https://jsb.ee/)

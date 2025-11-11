@@ -13,7 +13,7 @@ document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
 document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang}-darker)`)
 
 // Render SEO metadata
-const canonical = `https://${lang}bee.kognise.dev/`
+const canonical = `https://${lang}b.ee/`
 const description = `The ${lang === 'js' ? 'JavaScript' : 'Python'} game with a twist: you have 3 minutes to solve a challenge with your friends, but you only get one character at a time. Can you write working code before the time runs out?`
 render(html`
     <title>${lang}bee</title>
@@ -201,6 +201,10 @@ function Bee() {
             }}
         />
     `
+}
+
+function DisableScroll() {
+    return html`<style>body { overflow: hidden; }</style>`
 }
 
 function App() {
@@ -455,6 +459,7 @@ function App() {
 
     return html`
         <div class='game'>
+            <${DisableScroll} />
             <div class='header'>
                 <div class='question'>${gameState.question}</div>
                 <div class='timer'>${minutes}:${seconds.toString().padStart(2, '0')}</div>
