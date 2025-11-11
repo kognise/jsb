@@ -6,7 +6,15 @@ import confetti from 'https://esm.sh/canvas-confetti@1.9.4'
 import { Keyboard } from './keyboard.js'
 
 const html = htm.bind(h)
-const lang = window.location.host.startsWith('py') ? 'py' : 'js'
+let lang = (() => {
+    const params = new URLSearchParams(window.location.search)
+    const langParam = params.get('lang')
+    if (langParam !== null) {
+        return langParam
+    }
+    return window.location.host.startsWith('py') ? 'py' : 'js'
+})()
+
 
 // Set theme
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
