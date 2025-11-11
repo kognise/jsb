@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "prod": "PORT=80 NODE_ENV=production bun index.ts",
+        "prod": "NODE_ENV=production bun index.ts",
         "dev": "bun --watch index.ts"
     },
     "dependencies": {

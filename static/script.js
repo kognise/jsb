@@ -3,6 +3,7 @@ import { h, render } from 'https://esm.sh/preact@10.27.2'
 import { useState, useEffect, useRef } from 'https://esm.sh/preact@10.27.2/hooks'
 import htm from 'https://esm.sh/htm@3.1.1'
 import confetti from 'https://esm.sh/canvas-confetti@1.9.4'
+import { Keyboard } from './keyboard.js'
 
 const html = htm.bind(h)
 let lang = (() => {
@@ -499,6 +500,9 @@ function App() {
                     </div>
                 `)}
             </div>
+            <${Keyboard} onKey=${(c) => {
+                ws.send(JSON.stringify({ kind: 'letter', letter: c }))
+            }} />
         </div>
     `
 }
