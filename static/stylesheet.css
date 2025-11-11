@@ -429,5 +429,6 @@ button {
 
 ::selection {
     background: var(--theme);
+    background: color-mix(in srgb, var(--theme), transparent 0.00001%); /* fix for Safari */
     color: #000000;
 }
