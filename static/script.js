@@ -38,7 +38,7 @@ render(html`
 const ws = new ReconnectingWebSocket('/ws')
 
 const seen = new Set()
-for (const item of JSON.parse(localStorage.getItem('seen'))) {
+for (const item of JSON.parse(localStorage.getItem('seen') ?? '[]')) {
     if (item) seen.add(item)
 }
 
