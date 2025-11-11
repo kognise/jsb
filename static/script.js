@@ -14,7 +14,7 @@ let lang = (() => {
     }
     return window.location.host.startsWith('py') ? 'py' : 'js'
 })()
-
+const fullLang = lang === 'js' ? 'JavaScript' : 'Python'
 
 // Set theme
 document.documentElement.style.setProperty('--theme', `var(--theme-${lang})`)
@@ -22,7 +22,7 @@ document.documentElement.style.setProperty('--theme-darker', `var(--theme-${lang
 
 // Render SEO metadata
 const canonical = `https://${lang}b.ee/`
-const description = `The ${lang === 'js' ? 'JavaScript' : 'Python'} game with a twist: you have 3 minutes to solve a challenge with your friends, but you only get one character at a time. Can you write working code before the time runs out?`
+const description = `The ${fullLang} game with a twist: you have 3 minutes to solve a challenge with your friends, but you only get one character at a time. Can you write working code before the time runs out?`
 render(html`
     <title>${lang}bee</title>
     <link rel='icon' href='/bees/icon-${lang}.png' />
@@ -331,7 +331,7 @@ function App() {
                         <p>or <a href='${window.location.protocol}//${window.location.host.replace('py', 'js')}/' class='jsbee'>play jsbee</a> instead</p>
                     `}
                 <p>
-                    You and N friends (N >= 0) have 3 minutes to write a simple function, but there's a twist: you alternate typing one character at a time, and you can't see what you've written until you submit the code... or run out of time.
+                    You and N friends (N >= 0) have 3 minutes to write a simple ${fullLang} function, but there's a twist: you alternate typing one character at a time, and you can't see what you've written until you submit the code... or run out of time.
                 </p>
                 <label for='room-code'>New or existing game code:</label>
                 <input
