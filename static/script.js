@@ -89,34 +89,17 @@ function doConfetti() {
     }())
 }
 
-// const useAnimationFrame = (callback) => {
-//     const requestRef = useRef()
-//     const previousTimeRef = useRef()
-
-//     const animate = (time) => {
-//         if (previousTimeRef.current !== undefined) {
-//         const deltaTime = time - previousTimeRef.current
-//             callback(deltaTime)
-//         }
-//         previousTimeRef.current = time
-//         requestRef.current = requestAnimationFrame(animate)
-//     };
-
-//     useEffect(() => {
-//         requestRef.current = requestAnimationFrame(animate)
-//         return () => cancelAnimationFrame(requestRef.current)
-//     }, [])
-// }
-
-const beeSpeed = 0.1
+const beeSpeed = 0.15
 const deltaTime = 60
 const safeArea = 80
+const safeTime = 1000
 const initialPosition = {
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
 }
 function Bee() {
     const goal = useRef(initialPosition)
+    const leftSafeAreaAt = useRef(Date.now() - safeTime)
     const [ pos, setPos ] = useState(initialPosition)
     const [ dir, setDir ] = useState('left') // left | right
     const [ isFlying, setIsFlying ] = useState(true)
@@ -146,6 +129,7 @@ function Bee() {
                     x: goal.current.x - pos.x,
                     y: goal.current.y - pos.y,
                 }
+                const dist = Math.hypot(diff.x, diff.y)
 
                 setIsDead(false)
                 if (goal.current.isDead) {
@@ -156,29 +140,43 @@ function Bee() {
                         return pos
                     }
                 } else {
-                    if (Math.abs(diff.x) <= safeArea && Math.abs(diff.y) <= safeArea) {
+                    // Inside safe area
+                    if (dist <= safeArea) {
+                        leftSafeAreaAt.current = null
                         setIsFlying(false)
                         return pos
-                    } else {
-                        setIsFlying(true)
                     }
+
+                    // Outside safe area
+                    if (!leftSafeAreaAt.current) {
+                        // Just left the safe area
+                        leftSafeAreaAt.current = Date.now()
+                    }
+                    if (Date.now() - leftSafeAreaAt.current <= safeTime) {
+                        // Still within grace period
+                        setIsFlying(false)
+                        return pos
+                    }
+
+                    // Safe time expired — start flying
+                    setIsFlying(true)
                 }
 
-                const newPos = {
-                    x: pos.x + Math.min(Math.abs(diff.x), beeSpeed * deltaTime) * Math.sign(diff.x),
-                    y: pos.y + Math.min(Math.abs(diff.y), beeSpeed * deltaTime) * Math.sign(diff.y),
-                }
+                if (dist > 0) {
+                    const step = Math.min(dist, beeSpeed * deltaTime)
 
-                if (newPos.x > pos.x) {
-                    setDir('right')
-                } else if (newPos.x < pos.x) {
-                    setDir('left')
-                }
+                    if (diff.x > 0) {
+                        setDir('right')
+                    } else if (diff.x < 0) {
+                        setDir('left')
+                    }
 
-                if (newPos.x === pos.x && newPos.y === pos.y) {
-                    return pos
+                    return {
+                        x: pos.x + (diff.x / dist) * step,
+                        y: pos.y + (diff.y / dist) * step,
+                    }
                 } else {
-                    return newPos
+                    return pos
                 }
             })
         }, deltaTime)
