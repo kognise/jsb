@@ -93,6 +93,7 @@ const beeSpeed = 0.15
 const deltaTime = 60
 const safeArea = 80
 const safeTime = 1000
+const bees = [ 'dead', 'flying', 'idle' ]
 const initialPosition = {
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
@@ -133,8 +134,6 @@ function Bee() {
 
                 setIsDead(false)
                 if (goal.current.isDead) {
-                    setIsFlying(true)
-
                     if (diff.x === 0 && diff.y === 0) {
                         setIsDead(true)
                         return pos
@@ -158,8 +157,7 @@ function Bee() {
                         return pos
                     }
 
-                    // Safe time expired — start flying
-                    setIsFlying(true)
+                    // Safe time expired — fly!
                 }
 
                 if (dist > 0) {
@@ -170,6 +168,7 @@ function Bee() {
                     } else if (diff.x < 0) {
                         setDir('left')
                     }
+                    setIsFlying(diff.y < 0)
 
                     return {
                         x: pos.x + (diff.x / dist) * step,
@@ -184,21 +183,25 @@ function Bee() {
         return () => clearInterval(interval)
     }, [])
 
-    return html`
+    const whichBee = isDead ? 'dead' : isFlying ? 'flying' : 'idle'
+    return bees.map((bee) => html`
         <img
+            key=${bee}
             class='bee'
-            src=${`/bees/${isDead ? 'dead' : isFlying ? 'flying' : 'idle'}.gif`}
+            src=${`/bees/${bee}.gif`}
             width=${30}
-            style=${{
-                transform: dir === 'left'
-                    ? isDead ? 'scale(1.5)' : ''
-                    : isDead ? 'scaleX(-1.5) scaleY(1.5)' : 'scaleX(-1)',
-                filter: lang === 'py' ? 'hue-rotate(175deg)' : '',
-                top: `${pos.y}px`,
-                left: `${pos.x}px`,
-            }}
+            style=${bee === whichBee
+                ? {
+                    transform: dir === 'left'
+                        ? isDead ? 'scale(1.5)' : ''
+                        : isDead ? 'scaleX(-1.5) scaleY(1.5)' : 'scaleX(-1)',
+                    filter: lang === 'py' ? 'hue-rotate(175deg)' : '',
+                    top: `${pos.y}px`,
+                    left: `${pos.x}px`,
+                }
+                : { display: 'none' }}
         />
-    `
+    `)
 }
 
 function DisableScroll() {
