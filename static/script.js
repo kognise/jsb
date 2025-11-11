@@ -316,17 +316,17 @@ function App() {
             }}>
                 ${lang === 'js'
                     ? html`
-                        <h1>Join or start a <span class='brand'>jsbee</span> game</h1>
+                        <h1>Start or join a <span class='brand'>jsbee</span> game</h1>
                         <p>or <a href='${window.location.protocol}//${window.location.host.replace('js', 'py')}/' class='pybee'>play pybee</a> instead</p>
                     `
                     : html`
-                        <h1>Join or start a <span class='brand'>pybee</span> game</h1>
+                        <h1>Start or join a <span class='brand'>pybee</span> game</h1>
                         <p>or <a href='${window.location.protocol}//${window.location.host.replace('py', 'js')}/' class='jsbee'>play jsbee</a> instead</p>
                     `}
                 <p>
                     You and N friends (N >= 0) have 3 minutes to write a simple function, but there's a twist: you alternate typing one character at a time, and you can't see what you've written until you submit the code... or run out of time.
                 </p>
-                <label for='room-code'>Game password:</label>
+                <label for='room-code'>New or existing game code:</label>
                 <input
                     id='room-code'
                     type='text'
@@ -335,7 +335,7 @@ function App() {
                     onInput=${(event) => setRoomCode(event.target.value)}
                     autoFocus
                 />
-                <button type='submit' disabled=${isConnecting}>Join or start</button>
+                <button type='submit' disabled=${isConnecting}>Start or join</button>
             </form>
         `
     }
