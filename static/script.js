@@ -3,7 +3,7 @@ import { h, render } from 'https://esm.sh/preact@10.27.2'
 import { useState, useEffect, useRef } from 'https://esm.sh/preact@10.27.2/hooks'
 import htm from 'https://esm.sh/htm@3.1.1'
 import confetti from 'https://esm.sh/canvas-confetti@1.9.4'
-import { Keyboard } from './keyboard.js'
+import { Keyboard, allCharacters } from './keyboard.js'
 
 const html = htm.bind(h)
 let lang = (() => {
@@ -33,6 +33,12 @@ render(html`
     <meta property='og:type' content='website' />
     <meta property='og:url' content=${canonical} />
 `, document.head)
+
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+console.log(allCharacters.join(''))
+link.href = 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz@0,14..32;1,14..32&display=swap&text=' + encodeURIComponent(allCharacters.join(''))
+document.head.appendChild(link)
 
 // Start everything else!
 const ws = new ReconnectingWebSocket('/ws')

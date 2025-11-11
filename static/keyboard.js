@@ -32,11 +32,11 @@ const display = {
 export const allCharacters = [
     ...new Set(Object.values(layouts).flatMap(
         (layout) => layout.flatMap(
-            (row) => row.split(' ').map(
-                (key) => key.length > 1 ? display[key] : key
+            (row) => row.split(' ').flatMap(
+                (key) => key.length > 1 ? display[key].length > 1 ? [] : display[key] : [ key, key.toUpperCase() ]
             )
         )
-    ))
+    ).concat(display.shiftActivated))
 ]
 
 function Key(props) {
